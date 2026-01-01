@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Subtitle Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Subtitle Generator</h1>
+            <p>Turn one screenshot into a cinematic dialogue scene.</p>
+        </header>
+
+        <main>
+            <div class="controls-panel">
+                <!-- 1. Image Upload -->
+                <div class="control-group">
+                    <label class="section-title">1. Base Image</label>
+                    <label for="imageInput" class="custom-file-upload">
+                        <span>Select Screenshot</span>
+                        <input type="file" id="imageInput" accept="image/*">
+                    </label>
+                </div>
+
+                <!-- 2. Subtitle Text -->
+                <div class="control-group">
+                    <label class="section-title" for="subtitleText">2. Subtitle Text</label>
+                    <textarea id="subtitleText"
+                        placeholder="Line 1 (Full Image)&#10;Line 2 (Subtitle only)&#10;Line 3..." rows="5"></textarea>
+                    <p class="hint">Each line creates a new stitched frame.</p>
+                </div>
+
+                <!-- 3. Styling -->
+                <div class="control-group style-group" id="styleControls">
+                    <label class="section-title">3. Styling</label>
+
+                    <div class="style-row">
+                        <div class="input-wrapper">
+                            <label>Font Size</label>
+                            <input type="number" id="fontSize" value="40">
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Line Height (Crop)</label>
+                            <input type="number" id="cropHeight" value="120" title="Height of the subtitle strip">
+                        </div>
+                    </div>
+
+                    <div class="style-row">
+                        <div class="input-wrapper">
+                            <label>Text Color</label>
+                            <input type="color" id="textColor" value="#ffffff">
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Stroke Color</label>
+                            <input type="color" id="strokeColor" value="#000000">
+                        </div>
+                    </div>
+
+                    <div class="style-row">
+                        <div class="input-wrapper">
+                            <label>Stroke Width</label>
+                            <input type="number" id="strokeWidth" value="3">
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Bg Color</label>
+                            <input type="color" id="bgColor" value="#000000">
+                        </div>
+                    </div>
+
+                    <div class="slider-wrapper">
+                        <label>Bg Opacity: <span id="bgOpacityValue">0</span></label>
+                        <input type="range" id="bgOpacity" min="0" max="1" step="0.1" value="0">
+                    </div>
+
+                    <div class="slider-wrapper">
+                        <label>Text Bottom Offset: <span id="offsetValue">50</span>px</label>
+                        <input type="range" id="textOffset" min="0" max="200" value="50">
+                    </div>
+                </div>
+
+                <div class="control-group actions">
+                    <button id="downloadBtn" class="btn primary" disabled>Download Result</button>
+                    <button id="resetBtn" class="btn secondary">Reset</button>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <div class="canvas-container">
+                    <canvas id="previewCanvas"></canvas>
+                    <div id="placeholder" class="placeholder">
+                        <div class="icon">🖼️</div>
+                        <p>Upload an image to start</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
