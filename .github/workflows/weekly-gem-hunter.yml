@@ -42,9 +42,10 @@ jobs:
         run: npm run analyze-gems
 
       - name: Commit and Push Changes
+        working-directory: ./potatoblog
         run: |
           git config --global user.name "Gem Hunter Bot"
           git config --global user.email "bot@potatoblog.ai"
-          git add potatoblog/reports/gems/ potatoblog/posts/
+          git add reports/gems/ posts/
           git commit -m "auto: weekly hidden gems update [$(date +%Y-%m-%d)]" || echo "No changes to commit"
           git push
