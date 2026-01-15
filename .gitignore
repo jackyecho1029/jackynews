@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+dist/
+.env
+.DS_Store
+
+# WeChat Analysis Data
+wechat_data/node_modules/
+wechat_data/EchoTrace/
+wechat_data/chathistory/
+wechat_data/start_*.bat
+wechat_data/chrome_profile_x/
+wechat_data/logs/
+
+# Generated Reports (Optional - keep if you want to backup reports)
+# wechat_data/reports/
+
+# Next.js / Web Projects
+.next/
+out/
+build/
+.vercel/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

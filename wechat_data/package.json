@@ -1,0 +1,20 @@
+{
+  "name": "wechat-analysis",
+  "version": "1.0.0",
+  "description": "WeChat group chat analysis system",
+  "type": "module",
+  "scripts": {
+    "analyze": "npx tsx scripts/analyze-wechat.ts",
+    "ops-report": "npx tsx scripts/generate-ops-report.ts",
+    "journal": "npx tsx scripts/update-journal.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "dotenv": "^16.4.7",
+    "puppeteer": "^24.35.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
