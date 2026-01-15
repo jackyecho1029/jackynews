@@ -1,0 +1,3 @@
+[submodule "potatoblog"]
+	path = potatoblog
+	url = https://github.com/jackyecho1029/potatoblog.git
