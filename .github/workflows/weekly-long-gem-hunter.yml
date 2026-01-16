@@ -1,0 +1,53 @@
+name: Weekly Long-form YouTube Gems Hunt
+
+on:
+  schedule:
+    - cron: '0 0 * * 6' # Every Saturday at midnight UTC
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  long-gem-hunt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: recursive
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './potatoblog/package-lock.json'
+
+      - name: Install Dependencies
+        working-directory: ./potatoblog
+        run: npm install
+
+      - name: Run Long-form Discovery
+        working-directory: potatoblog
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: npm run find-long-gems
+
+      - name: Run Deep Analysis & Blog Generation
+        working-directory: potatoblog
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run analyze-long-gems
+
+      - name: Commit and Push Changes
+        working-directory: ./potatoblog
+        run: |
+          git config --global user.name "Gem Hunter Bot"
+          git config --global user.email "bot@potatoblog.ai"
+          git checkout main
+          git add reports/gems/ posts/
+          git commit -m "auto: weekly long-form gems update [$(date +%Y-%m-%d)]" || echo "No changes to commit"
+          git push origin main
