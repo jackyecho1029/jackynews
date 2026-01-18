@@ -72,94 +72,43 @@ anchor_thought: "[Thought-provoking quote for the day]"
 
 ## Workflow Steps
 
-### Step 1: Check Existing Posts
+### Step 1: Automated Generation
+
+Since the system is now fully automated (V1), you do not need to manually check posts or draft content.
+
+Run the one-click generation script:
 
 ```bash
 cd D:\Antigravity\Jackypotato\potatoblog
-dir posts\x-signals
+npm run generate-x-signal
 ```
 
-Verify the latest file date. Today's file should be named `YYYY-MM-DD-daily-signals.md`.
+**What this script does:**
+1.  **Fetches** latest tweets from 30+ sources (via local RSSHub + your Auth Token).
+2.  **Deduplicates** content against the last 7 days of posts.
+3.  **Generates** a full Markdown post using Gemini AI, including:
+    *   Dynamic Title & Anchor Thought
+    *   Category Classification
+    *   Chinese Summary & "Potato's Take"
+    *   **Source Links** for every viewpoint
+4.  **Saves** the file to `posts/x-signals/[YYYY-MM-DD]-daily-signals.md`.
 
-### Step 2: Gather Content
+### Step 2: Publish to Blog
 
-**Primary Sources** (X accounts to monitor):
-- @naval - Philosophy, AI, wealth
-- @levelsio - Indie hacking, solo entrepreneurship
-- @SahilBloom - Productivity, mindset
-- @Codie_Sanchez - Business acquisition, wealth
-- @paulg - Startups, technology
-- @elonmusk - Tech innovation
-- @Nicolascole77 - Writing, marketing
-
-**Content Categories**:
-1. 🤖 AI & Future Tech
-2. 💰 Wealth & Solo-preneurship
-3. 📢 Marketing & Branding
-4. 🧠 Wisdom & Productivity
-
-### Step 3: Create the Post Manually
-
-Since there is **no automated scraper** for X content, the post must be created manually:
-
-1. Research trending topics from the monitored accounts
-2. Use web search to gather recent insights
-3. Create the markdown file following the template above
-4. Include source links in format: `[Source](https://x.com/username/status/xxx)`
-
-**Example command to create file**:
-```bash
-# Create new file (replace date)
-code posts/x-signals/2026-01-17-daily-signals.md
-```
-
-### Step 4: Publish to Blog
+Once the script finishes (it will say `✅ Created/Updated draft`), simply push to GitHub:
 
 ```bash
-cd D:\Antigravity\Jackypotato\potatoblog
-
-# Stage the new file
-git add posts/x-signals/YYYY-MM-DD-daily-signals.md
-
-# Commit
-git commit -m "feat: add X Signal daily post for YYYY-MM-DD"
-
-# Push to trigger Vercel deployment
-git push origin main
+git add .
+git commit -m "feat: daily x signal update"
+git push
 ```
 
-### Step 5: Verify Deployment
+Vercel will automatically deploy the changes.
 
-Visit: `https://potatoecho.com/x-signals` to confirm the new post appears.
+## Optional: Configuration
 
-## Optional: Image Enhancement (Deprecated)
-
-> ⚠️ **Note**: Image generation has been disabled as per user preference.
-
-Previously, `scripts/enhance-x-signals.ts` was used to:
-- Generate Doraemon-style illustrations for each viewpoint
-- Simplify technical jargon for beginners
-
-To run (if needed):
-```bash
-cmd /c "npx tsx scripts/enhance-x-signals.ts"
-```
-
-## Troubleshooting
-
-### Git Push Rejected
-```bash
-git stash
-git pull --rebase origin main
-git stash pop
-git push origin main
-```
-
-### PowerShell Execution Policy Error
-Use `cmd /c` prefix:
-```bash
-cmd /c "npx tsx scripts/enhance-x-signals.ts"
-```
+-   **Add Sources**: Edit `config/x-sources.json` to add new Twitter handles.
+-   **Update Token**: If fetching fails (503 error), update `TWITTER_AUTH_TOKEN` in `D:\Antigravity\Jackypotato\tools\RSSHub\.env` with a fresh browser cookie.
 
 ## Related Files
 
