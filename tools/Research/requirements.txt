@@ -1,0 +1,6 @@
+requests
+google-generativeai
+pandas
+openpyxl
+python-dotenv
+colorama

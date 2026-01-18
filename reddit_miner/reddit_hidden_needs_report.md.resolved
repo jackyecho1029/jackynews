@@ -1,0 +1,66 @@
+# 🧶 海外隐形需求与选题报告 (基于 Reddit Intelligence)
+
+> **数据来源**: WordCrafter Dashboard (Reddit Intelligence)
+> **分析对象**: `r/Ceramics`, `r/Pottery`, `r/Tea`
+> **核心发现**: 海外用户不再满足于“好看”，他们开始追求“硬核知识”、“功能创新”和“情感陪伴”。
+
+---
+
+## 🔍 五大隐形需求 (Hidden Needs)
+
+### 1. 功能性焦虑：运输与耐用性
+*   **现象**: 评论区大量出现关于 *"shipping breakage"* (运输破损) 和 *"handle durability"* (把手耐用性) 的担忧。
+*   **隐形需求**: 用户不仅买美感，更买**安全感**。
+*   **应对策略**:
+    *   **Shopify 优化**: 在产品页增加 "Bomb-proof Packaging" (防爆包装) 的 GIF 展示。
+    *   **内容选题**: 《我们如何把易碎品寄到地球另一端？CeramicVoices 包装测试暴力实录》。
+
+### 2. 硬核知识饥渴：釉料与火焰
+*   **现象**: `Glaze Chemistry` 和 `Cone 6` 是高频热词。用户痴迷于“为什么这个蓝色会变成那样？”
+*   **隐形需求**: 渴望成为**“懂行的收藏家”**，而不仅仅是消费者。
+*   **应对策略**:
+    *   **内容选题**: 《揭秘窑变：为什么同一个配方，烧出来完全不同？(图解)》。
+    *   **信任建设**: 为每个产品附带一张“烧制身份证”（温度、泥料、釉料配方）。
+
+### 3. "Grandpa Style"：茶文化的去精英化
+*   **现象**: `Gaiwan` (盖碗) 和 `Grandpa style` (大杯泡茶) 热度极高。
+*   **隐形需求**: 反对繁琐的茶道仪式，追求**松弛感 (Chill Vibes)**。
+*   **应对策略**:
+    *   **选品建议**: 推出适合“大杯直泡”的宽口马克杯或带有过滤功能的简易茶具。
+    *   **内容选题**: 《Grandpa Style：为什么这种最“土”的喝茶方式在 Reddit 火了？》。
+
+### 4. 宠物与奇趣：情感投射
+*   **现象**: 宠物相关的陶瓷（慢食碗、定制画像）和带有幽默感的“怪奇陶瓷”互动率极高。
+*   **隐形需求**: 陶瓷作为**家庭成员（宠物）的延伸**，以及社交货币。
+*   **应对策略**:
+    *   **内容选题**: 《为你的猫定制一个“慢食艺术碗”：比宜家好在哪里？》。
+
+### 5. 真实性验证：紫砂与手作
+*   **现象**: 对“Etsy 量产货”的厌倦，和对“真实手作”的渴望。
+*   **隐形需求**: 需要**证据**证明这是某个具体的人亲手做的。
+*   **应对策略**:
+    *   **内容选题**: 《如何一眼识别注浆壶(Slip-cast)与手拉坯(Wheel-thrown)？》。
+
+---
+
+## 💡 接下来 30 天的内容日历 (Content Calendar)
+
+| 平台 | 选题方向 | 标题示例 | 目的 |
+| :--- | :--- | :--- | :--- |
+| **Blog** | 硬核知识 | "The Science of Shipping Fragile Art: Our 5-Step Logic" | 建立信任 (Trust) |
+| **Reddit** | 视觉冲击 | "Result of a 12-hour wood firing. I call it 'Dragon Eye'." | 获取流量 (Traffic) |
+| **Reddit** | 争议话题 | "Unpopular Opinion: Grandpa style tea is better than Gongfu." | 激发讨论 (Engagement) |
+| **Shopify** | 产品故事 | "Meet the artist who spent 20 years perfecting this one blue glaze." | 提高转化 (Conversion) |
+
+---
+
+## 🛠️ 你的专属工作流 (Workflow)
+
+为了让你能持续利用这个 Dashboard，建议每周末执行一次：
+
+1. **Check**: 登录 WordCrafter，看 `Trending Topics`。
+2. **Capture**: 截图 `Keywords` 云图。
+3. **Draft**: 用 Gemini 生成 3 个基于新关键词的 Blog 标题。
+4. **Post**: 在 Reddit 对应的 Subreddit 发起相关讨论。
+
+*Powered by Potato Analytics 🥔*
