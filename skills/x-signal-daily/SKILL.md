@@ -115,4 +115,4 @@ Vercel will automatically deploy the changes.
 - `lib/x-signals.ts` - Post data reader for the blog
 - `app/x-signals/page.tsx` - X Signal listing page
 - `app/x-signals/[slug]/page.tsx` - Individual post page
-- `scripts/enhance-x-signals.ts` - Image enhancement script (optional)
+- `scripts/enhance-x-signals.ts` - Content simplification script (Image generation disabled)
