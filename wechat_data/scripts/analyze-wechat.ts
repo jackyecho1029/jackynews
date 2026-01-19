@@ -617,7 +617,21 @@ async function main() {
     process.exit(1);
   }
 
-  const messages = loadChatHistory(path.join(chatHistoryPath, files[0]));
+  // 优先查找文件名中包含目标日期的文件（适配 _fresh_DATE.json）
+  let targetFile = files.find(f => f.includes(targetDate));
+
+  // 如果没找到特定日期的文件，则使用最新的文件（假设是月度导出）
+  if (!targetFile) {
+    // 按修改时间倒序排序
+    targetFile = files
+      .map(f => ({ name: f, time: fs.statSync(path.join(chatHistoryPath, f)).mtime.getTime() }))
+      .sort((a, b) => b.time - a.time)[0].name;
+    console.log(`⚠️ No specific file for ${targetDate} found, using latest file: ${targetFile}`);
+  } else {
+    console.log(`✅ Found specific data file: ${targetFile}`);
+  }
+
+  const messages = loadChatHistory(path.join(chatHistoryPath, targetFile));
 
   // 2. 预处理
   const processedMessages = preprocessMessages(messages, targetDate);
