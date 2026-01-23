@@ -4,7 +4,27 @@
 
 ---
 
+## 📦 安装步骤
+
+```bash
+# 1. Clone 仓库
+git clone https://github.com/jackyecho1029/jackynews.git
+cd jackynews/skills/ceramic-voices-reddit
+
+# 2. 安装依赖
+npm install
+
+# 3. 创建环境变量文件
+# 在 ceramic-voices-reddit 目录下创建 .env 文件：
+echo "GEMINI_API_KEY=你的_Gemini_API_Key" > .env
+```
+
+**获取 Gemini API Key：** https://aistudio.google.com/app/apikey
+
+---
+
 ## ✨ 功效
+
 
 | 功能 | 描述 |
 |------|------|
