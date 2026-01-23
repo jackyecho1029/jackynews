@@ -101,9 +101,9 @@ function preprocessMessages(messages: ChatMessage[], targetDate?: string): ChatM
     // 过滤系统消息
     if (msg.type === '系统消息' || msg.type === '撤回消息') return false;
     // 过滤纯表情消息
-    if (msg.type === '动画表情' && !msg.content.includes('：')) return false;
+    if (msg.type === '动画表情' && (typeof msg.content !== 'string' || !msg.content.includes('：'))) return false;
     // 过滤空消息
-    if (!msg.content || msg.content.trim() === '') return false;
+    if (!msg.content || typeof msg.content !== 'string' || msg.content.trim() === '') return false;
     // 过滤机器人消息
     if (msg.senderDisplayName?.includes('小云雀')) return false;
     return true;

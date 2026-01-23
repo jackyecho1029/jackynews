@@ -150,9 +150,16 @@ The scripts (`extract-date.ts`, `extract-from-db.ts`) resolve names in this prio
 2.  **User Aliases**: Check `config/user-aliases.json` for manual overrides.
 3.  **WXID Filtering**: If no name is found and the sender looks like a `wxid_` string, it displays as **"群成员"** to keep reports clean.
 
-### 3. Binary Prefix Cleaning
+### 3. Internal Database Architecture (Critical)
 
-The extraction scripts automatically detect and strip binary garbage characters (e.g., `(/`) that sometimes prefix usernames in the raw message content, ensuring only pure wxids or usernames are used for lookup.
+To maintain and troubleshoot the extraction script (`extract-from-db.ts`), note these structural "traps":
+
+- **Message Tables**: Group messages are NOT in a single table. Each group has its own table named `Msg_[MD5(GroupID)]`.
+  - Example: `50381382798@chatroom` -> `Msg_f330f51132799c870641cbaf14f1ac21`.
+- **Sender Attribution**: The `real_sender_id` column in message tables is unreliable across sessions.
+  - **Correct Logic**: The actual sender username is embedded as a prefix in the `message_content` field (Format: `username:\ncontent`).
+  - The script must parse this prefix using regex: `/^([^:\n]+):\n/`.
+- **Binary Cleaning**: Extraction scripts automatically detect and strip binary garbage characters (e.g., `(/`) that sometimes prefix usernames in the raw message content.
 
 ## Verification
 

@@ -1,11 +1,7 @@
-/**
- * 直接从 EchoTrace 数据库查询微信群消息
- * 简化版 - 直接查询最新数据，无需月度导出
- */
-
 import Database from 'better-sqlite3';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
 
 // 群组 ID
 const TARGET_GROUP = "50381382798@chatroom"; // 复利日知录第5季
@@ -19,7 +15,6 @@ const USER_ALIASES_PATH = path.join(process.cwd(), 'config', 'user-aliases.json'
 // 检测是否为 wxid 格式（不适合显示）
 function isWxidFormat(name: string): boolean {
     if (!name) return true;
-    // 匹配 wxid_xxx, Dwxid_xxx, 或纯字母数字长串
     return /^[Dd]?wxid_/i.test(name) || /^[A-Za-z0-9_]{15,}$/.test(name);
 }
 
@@ -43,7 +38,8 @@ function loadUserAliases(): Map<string, string> {
 }
 
 function formatTimestamp(ts: number): string {
-    const date = new Date(ts);
+    // 某些版本的 create_time 是秒，某些是毫秒
+    const date = new Date(ts > 10000000000 ? ts : ts * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
@@ -75,86 +71,73 @@ async function main() {
 
     console.log(`\n📂 Extracting messages for ${targetDate} from EchoTrace database...\n`);
 
-    // 找到所有 Msg 表
     const contactDbPath = path.join(DB_DIR, 'contact.db');
     const messageDbPath = path.join(DB_DIR, 'message_0.db');
 
     if (!fs.existsSync(contactDbPath) || !fs.existsSync(messageDbPath)) {
         console.error('❌ Database files not found');
-        console.error(`   Contact DB: ${contactDbPath}`);
-        console.error(`   Message DB: ${messageDbPath}`);
         process.exit(1);
     }
 
-    // 打开数据库
     const contactDb = new Database(contactDbPath, { readonly: true });
     const messageDb = new Database(messageDbPath, { readonly: true });
 
     try {
-        // 加载联系人
+        // 1. 加载所有联系人，映射 username 到昵称/备注
         console.log('📋 Loading contacts...');
-        const contacts = new Map();
-        const contactRows = contactDb.prepare('SELECT username, nick_name, remark FROM contact').all() as any[];
+        const contactByUsername = new Map();
+        const contactRows = contactDb.prepare('SELECT id, username, nick_name, remark FROM contact').all() as any[];
         for (const contact of contactRows) {
-            contacts.set(contact.username, {
-                nickname: contact.nick_name,
+            contactByUsername.set(contact.username, {
+                id: contact.id,
+                username: contact.username,
+                nickname: contact.nick_name || contact.username,
                 remark: contact.remark
             });
         }
-        console.log(`   ✅ Loaded ${contacts.size} contacts`);
+        console.log(`   ✅ Loaded ${contactByUsername.size} contacts`);
 
         // 加载用户别名
-        console.log('📋 Loading user aliases...');
         const userAliases = loadUserAliases();
 
-        // 查找群组消息表
-        const tablesQuery = messageDb.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'Msg_%'");
-        const tables = tablesQuery.all() as any[];
-        console.log(`\n📊 Found ${tables.length} message tables`);
+        // 2. 计算群 ID 的 MD5 以定位消息表
+        const tableSuffix = crypto.createHash('md5').update(TARGET_GROUP).digest('hex');
+        const tableName = `Msg_${tableSuffix}`;
+        console.log(`\n📊 Target table: ${tableName} (MD5 of ${TARGET_GROUP})`);
 
-        // 查询所有表
-        const allMessages: any[] = [];
-        for (const table of tables) {
-            const tableName = table.name;
-            try {
-                const stmt = messageDb.prepare(`
-          SELECT localId, createTime, type, content, isSend, talker, msgSvrId
-          FROM ${tableName}
-          WHERE talker = ?
-          ORDER BY createTime ASC
-        `);
-                const messages = stmt.all(TARGET_GROUP) as any[];
-                allMessages.push(...messages);
-            } catch (err) {
-                // 表结构可能不同，跳过
-                console.log(`   ⚠️  Skipping ${tableName}: ${err}`);
-            }
+        // 检查表是否存在
+        const tableCheck = messageDb.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name = ?").get(tableName);
+        if (!tableCheck) {
+            console.error(`❌ Table ${tableName} not found in database.`);
+            process.exit(1);
         }
 
-        console.log(`\n✅ Found total ${allMessages.length} messages in group`);
+        // 3. 查询目标日期的消息
+        const dateObj = new Date(targetDate);
+        const startTs = Math.floor(dateObj.getTime() / 1000);
+        const endTs = startTs + 86400;
 
-        // 筛选目标日期
-        const startTs = new Date(targetDate).getTime();
-        const endTs = startTs + 86400000; // +1 day
+        console.log(`🔍 Querying messages between ${startTs} and ${endTs}...`);
 
-        const filteredMessages = allMessages.filter(m =>
-            m.createTime >= startTs && m.createTime < endTs
-        );
+        const stmt = messageDb.prepare(`
+            SELECT local_id, create_time, local_type, message_content, real_sender_id, server_id
+            FROM ${tableName}
+            WHERE create_time >= ? AND create_time < ?
+            ORDER BY create_time ASC
+        `);
 
-        console.log(`   📅 Filtered to ${filteredMessages.length} messages on ${targetDate}`);
+        const messages = stmt.all(startTs, endTs) as any[];
+        console.log(`✅ Found ${messages.length} messages on ${targetDate}`);
 
-        if (filteredMessages.length === 0) {
-            console.log('\n⚠️  No messages found for this date');
-            const dates = new Set(allMessages.map(m => formatTimestamp(m.createTime).split(' ')[0]));
-            console.log('   Available dates:', Array.from(dates).slice(-20).join(', '));
+        if (messages.length === 0) {
             process.exit(0);
         }
 
-        // 转换格式
-        const formatted = filteredMessages.map(msg => {
-            // 提取发送者（群消息格式：senderUsername:\ncontent）
+        // 4. 转换并格式化
+        const formatted = messages.map(msg => {
+            // 真正的发送者信息在 message_content 里，格式: "username:\ncontent"
             let senderUsername = '';
-            let content = msg.content || '';
+            let content = String(msg.message_content || '');
 
             // 尝试从 content 提取发送者
             const match = content.match(/^([^:\n]+):\n/);
@@ -163,9 +146,10 @@ async function main() {
                 content = content.replace(/^[^:\n]+:\n/, '');
             }
 
-            const contact = contacts.get(senderUsername);
-            // 三层解析：1.联系人备注/昵称 2.用户别名配置 3.过滤wxid格式
-            let displayName = contact?.remark || contact?.nickname;
+            // 查找联系人信息
+            const senderInfo = contactByUsername.get(senderUsername);
+
+            let displayName = senderInfo?.remark || senderInfo?.nickname;
             if (!displayName) {
                 displayName = userAliases.get(senderUsername);
             }
@@ -174,47 +158,41 @@ async function main() {
             }
 
             return {
-                localId: msg.localId,
-                createTime: msg.createTime,
-                formattedTime: formatTimestamp(msg.createTime),
-                type: getMessageType(msg.type),
-                localType: msg.type,
-                content,
-                isSend: msg.isSend,
+                localId: msg.local_id,
+                createTime: msg.create_time * 1000, // 存为毫秒以便 JS 使用
+                formattedTime: formatTimestamp(msg.create_time),
+                type: getMessageType(msg.local_type),
+                localType: msg.local_type,
+                content: content,
+                isSend: 0,
                 senderUsername,
                 senderDisplayName: displayName,
-                source: msg.talker,
-                senderAvatarKey: senderUsername || msg.talker,
+                source: TARGET_GROUP,
+                senderAvatarKey: senderUsername || 'unknown',
             };
         });
 
-        // 包装成和导出JSON相同的格式
+        // 5. 封装并保存
         const output = {
             session: {
                 wxid: TARGET_GROUP,
-                nickname: '复利日知录第 5 季交流群（2026 ）',
-                remark: '复利日知录第 5 季交流群（2026 ）',
-                displayName: '复利日知录第 5 季交流群（2026 ）',
+                nickname: '复利日知录第 5 季',
+                displayName: '复利日知录第 5 季',
                 type: '群聊',
-                lastTimestamp: filteredMessages[filteredMessages.length - 1]?.createTime || 0,
                 messageCount: formatted.length
             },
             messages: formatted
         };
 
-        // 保存到 chathistory 目录（临时文件，用于今日分析）
-        const outputPath = path.join(
-            process.cwd(),
-            'chathistory',
-            `复利日知录第 5 季交流群（2026 ）_${Date.now()}.json`
-        );
+        const outDir = path.join(process.cwd(), 'chathistory');
+        if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
+        const outputPath = path.join(outDir, `复利日知录_${targetDate}_${Date.now()}.json`);
         fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
 
         console.log(`\n✅ Extraction complete!`);
         console.log(`   Output: ${outputPath}`);
-        console.log(`   Messages: ${formatted.length}`);
-        console.log(`   Time range: ${formatted[0]?.formattedTime} - ${formatted[formatted.length - 1]?.formattedTime}\n`);
+        console.log(`   File: ${path.basename(outputPath)}`);
 
     } finally {
         contactDb.close();
@@ -222,4 +200,7 @@ async function main() {
     }
 }
 
-main().catch(console.error);
+main().catch(err => {
+    console.error(`❌ Error: ${err.message}`);
+    process.exit(1);
+});

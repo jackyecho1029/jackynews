@@ -116,7 +116,7 @@ function buildUserProfiles(messages: ChatMessage[]): Map<string, UserProfile> {
         }
 
         // 检测@提及
-        const mentions = msg.content?.match(/@[\u4e00-\u9fa5a-zA-Z0-9_]+/g);
+        const mentions = (typeof msg.content === 'string') ? msg.content.match(/@[\u4e00-\u9fa5a-zA-Z0-9_]+/g) : null;
         if (mentions) {
             for (const mention of mentions) {
                 const partner = mention.substring(1);
