@@ -28,3 +28,5 @@ yarn-error.log*
 
 # Tools with their own git repos
 tools/MediaCrawler/
+tools/RSSHub/
+tools/RedditRadar/
