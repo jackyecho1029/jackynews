@@ -1,0 +1,13 @@
+{
+    "name": "ceramic-voices-reddit",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "process": "npx tsx process_reddit_data.ts",
+        "generate": "npx tsx generate_comments.ts"
+    },
+    "dependencies": {
+        "@google/generative-ai": "^0.24.1",
+        "dotenv": "^17.2.3"
+    }
+}
