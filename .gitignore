@@ -30,3 +30,41 @@ yarn-error.log*
 tools/MediaCrawler/
 tools/RSSHub/
 tools/RedditRadar/
+
+# Office temporary files
+~$*.xlsx
+~$*.docx
+~$*.pptx
+
+# Project folders (data/content/learning)
+Daily-Reflection/
+Shopify/
+instagram-strategy/
+learning-plans/
+library/
+ProductManager/
+lennys_transcripts/
+xhs_articles/
+wechat_articles/
+weibo_analyzer/
+weibohottopic/
+
+# Skills (keep main skills, ignore experimental ones)
+skills/HighAgencyLearning/
+skills/douyin-trending-topic-analyzer-v2/
+skills/potatoredink/
+skills/RedInk/
+
+# Reddit miner
+reddit_miner/
+
+# WeChat debug scripts
+wechat_data/*.js
+wechat_data/reports/
+
+# Installers
+*.exe
+
+# IDE
+.vscode/
+.agent/
