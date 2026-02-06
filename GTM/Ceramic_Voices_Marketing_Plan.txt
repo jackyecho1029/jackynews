@@ -1,0 +1,232 @@
+Ecommerce Marketing Plan
+for Ceramic Voices
+A comprehensive strategy for growing an artisan ceramics ecommerce business
+Prepared by CMO Growth Guide
+Executive Summary
+Ceramic Voices is an artisan ceramics ecommerce business featuring handcrafted pieces from featured artists
+like Ryan (Ran Xiangfei) and Liu Kun. The brand positioning centers on "Where Artisans Speak Through Color"
+with a focus on storytelling, craftsmanship, and bringing color and hope into homes. Products range from
+decorative vases to functional drinkware (tea sets, mugs), with price points from $72.99 to $200+.
+Current Strengths:
+• Strong brand voice and compelling artisan stories
+• Free worldwide shipping over $120
+• Established Shopify infrastructure
+• Multiple payment options
+• Current holiday sale (up to 50% off)
+Key Opportunities:
+The artisan/handmade ceramics market attracts buyers seeking unique, meaningful pieces over
+mass-produced items. This positions Ceramic Voices well for gift-giving occasions, home decor enthusiasts,
+and collectors.
+Target Audience Profiles
+Primary Audience: The Intentional Home Curator
+Adults 30-55 who invest thoughtfully in their living spaces. They prefer quality over quantity, appreciate knowing
+the story behind what they buy, and see home decor as an expression of personal values. Household income
+$75K+. They shop for themselves and for meaningful gifts.
+Secondary Audience: The Gift Giver
+People searching for unique, memorable gifts for weddings, housewarmings, holidays, and milestone
+occasions. They want something special that shows thought and care, not another generic gift card or
+mass-produced item.
+Tertiary Audience: Ceramic Collectors and Enthusiasts
+People who specifically collect handmade ceramics, follow ceramic artists, and appreciate the craft. They
+attend pottery shows, follow ceramics hashtags, and are willing to pay premium prices for exceptional pieces.
+Marketing Strategy by Channel
+1. Search Engine Optimization (SEO) and AI Search Visibility
+On-Page Optimization
+Product descriptions should be expanded significantly. Each product page needs:
+• The artisan's name and studio prominently featured
+• The story behind the piece or collection
+• Materials and dimensions
+• Care instructions
+• Keywords naturally woven throughout (handmade ceramics, artisan pottery, porcelain vase, ceramic
+mug, etc.)
+Content Strategy for Organic Traffic
+Create a blog with articles targeting search intent:
+• "How to Style Colorful Ceramics in a Neutral Room"
+• "The Art of Chinese Porcelain: A Modern Interpretation"
+• "Caring for Handmade Ceramics: A Complete Guide"
+• "Choosing the Perfect Ceramic Gift for Any Occasion"
+• "What Makes Handmade Ceramics Worth the Investment"
+Technical SEO
+• Ensure all images have descriptive alt text
+• Add schema markup for products (price, availability, reviews)
+• Optimize page load speed (critical for image-heavy sites)
+• Submit sitemap to Google Search Console
+2. Email Marketing
+List Building
+Add a prominent email signup with a compelling offer:
+• "Join our list for first access to new artisan collections + 10% off your first order"
+• Pop-up after 30 seconds on site or on exit intent
+• Footer signup on every page
+Welcome Sequence (5 emails over 2 weeks)
+1. Welcome + discount code + brand story
+2. Meet the artisans (Ryan and Liu Kun profiles)
+3. How our pieces are made (behind the scenes)
+4. Customer favorites and reviews
+5. Reminder: your discount expires soon
+Abandoned Cart Sequence (3 emails)
+1. Reminder at 1 hour: "You left something beautiful behind"
+2. At 24 hours: Highlight the artisan who made that piece
+3. At 72 hours: Final reminder, possibly with small incentive
+Post-Purchase Sequence
+• Order confirmation with care instructions
+• Shipping notification
+• Delivery follow-up with request for review
+• 30 days later: Complementary product suggestions
+• 60 days later: Invite to follow on social/join community
+Ongoing Campaigns
+• New collection announcements
+• Artisan spotlight stories
+• Seasonal gift guides
+• Sale notifications (sparingly, to maintain premium positioning)
+• Behind-the-scenes content from the artisans' studios
+3. Paid Advertising
+Meta (Facebook/Instagram) Ads
+Top of Funnel: Awareness
+• Video ads showing the creation process (clay to finished piece)
+• Carousel ads featuring the artisan + their work
+• Target: Interior design interests, home decor enthusiasts, handmade/artisan interests, Etsy shoppers,
+pottery/ceramics interests
+• Lookalike audiences based on past purchasers
+Middle of Funnel: Consideration
+• Retarget website visitors with product-specific ads
+• Dynamic product ads showing items they viewed
+• Customer testimonial ads
+• "Why handmade matters" educational content
+Bottom of Funnel: Conversion
+• Retarget cart abandoners with urgency messaging
+• Limited-time offers for warm audiences
+• Free shipping threshold reminders ("You're $X away from free worldwide shipping")
+Budget Recommendation: Start with $1,500-2,500/month to test and optimize.
+• 40% to prospecting/awareness
+• 30% to retargeting
+• 30% to conversion campaigns
+Pinterest Ads
+Pinterest is highly relevant for home decor purchases:
+• Shopping ads linked to product catalog
+• Idea pins showing styling inspiration
+• Target home decor, interior design, gift shopping keywords
+Google Ads
+Search Campaigns:
+• Brand terms: "Ceramic Voices"
+• Product terms: "handmade porcelain vase," "artisan ceramic mug," "colorful ceramic tea set"
+• Gift terms: "unique housewarming gift," "handmade wedding gift"
+Shopping Campaigns:
+• Feed optimized with detailed product titles
+• High-quality images
+• Competitive pricing displayed
+4. Social Media Strategy
+Instagram (Primary Platform)
+Content Pillars:
+• Product beauty shots (40%): Styled photos of pieces in beautiful settings
+• Process content (25%): The artisans at work, close-ups of techniques, kiln openings
+• Artisan stories (20%): Personal content about Ryan and Liu Kun, their philosophies, their studios
+• Customer content (15%): Repost customer photos, unboxing videos, reviews
+Posting Cadence: 4-5 feed posts per week, daily stories
+Reels Strategy:
+• Quick process videos (15-30 seconds)
+• Before/after reveals
+• Packing orders
+• Sound trending audio when appropriate
+Hashtag Strategy: Mix of broad reach (#ceramics #homedecor #handmade) and niche (#ceramicart
+#potterylove #studioceramics #contemporaryceramics)
+Pinterest
+• Create boards for each collection and use case (Vases, Tea Sets, Gift Ideas, etc.)
+• Pin every product multiple times with different images and descriptions
+• Create lifestyle pins showing pieces in room settings
+• Post 10-15 pins per day (mix of original and repins)
+TikTok
+Focus on process content that performs well on this platform:
+• Satisfying pottery videos
+• Artisan day-in-the-life content
+• Packing orders ASMR style
+• The "story behind this piece" format
+5. Influencer and Partnership Marketing
+Micro-Influencer Strategy
+Partner with:
+• Home decor/interior design accounts (10K-100K followers)
+• Lifestyle bloggers who feature their homes
+• Tea ceremony and matcha enthusiasts (for the drinkware collection)
+• Gift guide creators around holidays
+Compensation Options:
+• Product seeding (gift pieces in exchange for posts)
+• Affiliate commission (10-15% of sales they drive)
+• Flat fee for larger creators
+PR and Editorial
+Pitch to:
+• Design publications (Architectural Digest, Dwell, Domino)
+• Gift guides in lifestyle publications
+• Local publications in the artisans' home regions
+• Ceramic arts publications and blogs
+6. Conversion Rate Optimization
+Website Improvements to Prioritize
+• Add customer reviews to product pages (use Loox, Judge.me, or similar)
+• Expand the "About Us" and artisan pages with richer storytelling and video
+• Add a size guide with common objects for reference
+• Show the free shipping threshold prominently in cart and on product pages
+• Add urgency elements during sales (countdown timers, "only X left")
+• Consider adding Klarna/Afterpay for payment flexibility on higher-priced items
+• Add a gift wrapping option
+Trust Builders
+• Display shipping and returns policy prominently
+• Add FAQ page addressing common concerns
+• Show secure payment badges
+• Feature customer testimonials on homepage
+Seasonal and Campaign Calendar
+Q1 (January - March)
+• January: "New Year, New Home" campaign
+• February: Valentine's Day gift guide (communal cups for couples, decorative pieces)
+• March: Spring collection launch, Easter gift promotion
+Q2 (April - June)
+• Mother's Day gift guide and promotion
+• Wedding season focus (registry promotion, bridesmaid gifts)
+• Father's Day (if applicable pieces)
+Q3 (July - September)
+• Summer entertaining focus
+• Back-to-home fall preview
+• Labor Day sale
+Q4 (October - December)
+• Holiday gift guides (launch early November)
+• Black Friday/Cyber Monday sale
+• Last-chance holiday shipping deadlines
+• New Year collection preview
+Key Performance Indicators (KPIs)
+Revenue Metrics
+• Monthly revenue
+• Average order value (AOV)
+• Revenue by channel
+• Customer lifetime value (CLV)
+Traffic Metrics
+• Website sessions by source
+• New vs. returning visitors
+• Bounce rate
+• Pages per session
+Conversion Metrics
+• Conversion rate (overall and by traffic source)
+• Cart abandonment rate
+• Email signup rate
+Email Metrics
+• List growth rate
+• Open rate and click rate
+• Revenue from email
+Paid Media Metrics
+• Return on ad spend (ROAS)
+• Cost per acquisition (CPA)
+• Cost per click (CPC)
+Recommended First 90 Days
+Month 1: Foundation
+• Implement email popup and welcome sequence
+• Optimize top 10 product pages for SEO
+• Set up abandoned cart email sequence
+• Install review collection app
+• Begin posting consistently on Instagram and Pinterest
+Month 2: Paid Acquisition
+• Launch Meta ads with initial testing budget
+• Set up Google Shopping
+• Start Pinterest ads
+• Begin influencer outreach
+Month 3: Optimization
+• Analyze what's working and double down
+• Expand email sequences
+• Publish first 4 blog posts
+• Refine ad targeting based on data
+• Plan next quarter's campaigns

@@ -13,6 +13,7 @@ import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import puppeteer from 'puppeteer';
+import { generateTemplate, ReportData } from './html-template.js';
 
 // 加载环境变量
 dotenv.config({ path: path.join(process.cwd(), '../potatoblog/.env.local') });
@@ -24,7 +25,7 @@ if (!GEMINI_API_KEY) {
 }
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
 
 // ================== 类型定义 ==================
 
@@ -249,23 +250,34 @@ ${topUsers}
 - **个性化解读:** 描述  
 - **生活场景关联:** 描述
 
-## 五、今日金句
+## 五、群内金句精选
 
-为每条金句使用以下格式（生成3-5条）：
+请务必提取 3-5 条金句，为每条金句使用以下格式：
 
 [QUOTE]
 「金句内容放在这里，要完整和精炼」 —— 发言者姓名
 
-**💡 思考:** 这句话值得记住是因为...用2-3句话解释这句金句的价值、如何理解、如何应用到自己的生活中。
+**💡 思考:** 这句话值得记住是因为...总结其核心价值或应用场景。
 [/QUOTE]
 
 ## 六、每日行动建议
 
-基于今天的讨论，给出一个具体的、可立即执行的小行动建议。
-要求：
-- 具体到可以在5分钟内开始
-- 与今日话题相关
-- 能让人感受到复利效应的开始
+**必须按照以下格式输出：**
+
+【一句话行动主题】
+
+1. **第一个最小阻力行动**（不超过10个字）
+2. **第二个最小阻力行动**（不超过10个字）
+3. **第三个最小阻力行动**（不超过10个字）
+
+**要求：**
+- 行动主题用【】包裹，简洁有力（例如：【5分钟追根溯源行动】）
+- 必须列出3个具体步骤，每个步骤以数字开头
+- 每个步骤用 **粗体** 包裹
+- 步骤要具体到可以在5分钟内开始执行
+- 与今日话题紧密相关
+- 阻力最小，容易上手
+
 
 ---
 *由 AI 自动生成，仅供参考*
@@ -284,277 +296,208 @@ ${topUsers}
 // ================== 报告生成 ==================
 
 function generateHtmlReport(markdownContent: string, date: string): string {
-  // 处理特殊格式标签
-  let html = markdownContent;
-
-  // 处理 [STATS]...[/STATS] 块 - 转换为统计卡片
-  html = html.replace(/\[STATS\]([\s\S]*?)\[\/STATS\]/g, (match, content) => {
-    const lines = content.trim().split('\n').filter((l: string) => l.trim());
-    const stats = lines.map((line: string) => {
+  // 解析 [STATS]
+  let statsHtml = '';
+  const statsMatch = markdownContent.match(/\[STATS\]([\s\S]*?)\[\/STATS\]/);
+  if (statsMatch) {
+    const lines = statsMatch[1].trim().split('\n').filter(l => l.trim());
+    statsHtml = lines.map(line => {
       const parts = line.split(':');
       if (parts.length >= 2) {
         const label = parts[0].trim();
-        const value = parts.slice(1).join(':').trim().replace(/[条人个]/g, '');
-        return `<div class="stat-item"><div class="stat-value">${value}</div><div class="stat-label">${label}</div></div>`;
+        let value = parts.slice(1).join(':').trim();
+        // Clean up value: remove units and extra text
+        value = value
+          .replace(/[条人个]/g, '')
+          .replace(/主要主体.*$/g, '') // Remove "主要主体（含...）" etc
+          .replace(/\(.*?\)/g, '') // Remove parentheses content
+          .replace(/（.*?）/g, '') // Remove Chinese parentheses content
+          .trim();
+        return `<div class="stat-card"><div class="stat-value">${value}</div><div class="stat-label">${label}</div></div>`;
       }
       return '';
     }).join('');
-    return `<div class="stats-grid">${stats}</div>`;
-  });
+  }
 
-  // 处理 [TOPIC]...[/TOPIC] 块 - 转换为话题卡片
-  html = html.replace(/\[TOPIC\]([\s\S]*?)\[\/TOPIC\]/g, (match, content) => {
-    return `<div class="topic-card">${content}</div>`;
-  });
+  // 解析社交结构 (## 一)
+  const overviewMatch = markdownContent.match(/## 一、群聊概况([\s\S]*?)(?=## 二、社交结构洞察)/);
+  const overviewRaw = overviewMatch ? overviewMatch[1].trim() : '';
 
-  // 处理 [QUOTE]...[/QUOTE] 块 - 转换为金句卡片
-  html = html.replace(/\[QUOTE\]([\s\S]*?)\[\/QUOTE\]/g, (match, content) => {
-    // 解析金句和作者
-    const quoteMatch = content.match(/[「"'](.+?)[」"']\s*[—-]+\s*(.+?)(?:\n|$)/);
+  // 解析社交结构/总结 (## 二)
+  const summaryMatch = markdownContent.match(/## 二、社交结构洞察([\s\S]*?)(?=## 三、话题地图)/);
+  const summaryRaw = summaryMatch ? summaryMatch[1].trim() : '';
+
+  // 合并概况和社交结构，生成总结HTML
+  const combinedSummary = (overviewRaw + '\n\n' + summaryRaw).trim();
+  const summaryHtml = combinedSummary
+    .replace(/\[STATS\]([\s\S]*?)\[\/STATS\]/g, '') // 移除stats标记
+    .replace(/^### (.*$)/gim, '<strong>$1</strong><br>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^- (.*$)/gim, '• $1<br>')
+    .replace(/\n\n/g, '<br>')
+    .replace(/\n/g, ' ');
+
+  // 解析 [TOPIC] - 添加颜色交替逻辑
+  let topicsHtml = '';
+  const topicRegex = /\[TOPIC\]([\s\S]*?)\[\/TOPIC\]/g;
+  const topicColors = [
+    { bg: 'bg-[#f0fdf4]', border: 'border-green-100', label: 'text-green-600', desc: 'text-green-700/60' },
+    { bg: 'bg-[#f0f9ff]', border: 'border-blue-100', label: 'text-blue-600', desc: 'text-blue-700/60' },
+    { bg: 'bg-[#fef3f2]', border: 'border-orange-100', label: 'text-orange-600', desc: 'text-orange-700/60' },
+  ];
+  let topicIndex = 0;
+  let tMatch;
+
+  while ((tMatch = topicRegex.exec(markdownContent)) !== null) {
+    const content = tMatch[1].trim();
+    const titleMatch = content.match(/### (\d+\.\s+)?(.+?) \(约(\d+%)占比\)/);
+    const keywordsMatch = content.match(/- \*\*关键词:\*\* (.+)/);
+    const evolutionMatch = content.match(/- \*\*演变:\*\* ([\s\S]+?)(?=- \*\*精选对话|$)/);
+
+    if (titleMatch) {
+      const color = topicColors[topicIndex % topicColors.length];
+      const topicNum = String(topicIndex + 1).padStart(2, '0');
+      // Use evolution text, but limit to reasonable length (50 chars)
+      let description = evolutionMatch ? evolutionMatch[1].trim() : '';
+      // If too long, try to truncate at sentence end
+      if (description.length > 50) {
+        const firstSentence = description.match(/^.{1,50}[。，,\.!！]+/);
+        description = firstSentence ? firstSentence[0] : description.substring(0, 50) + '...';
+      }
+      topicsHtml += `
+        <div class="${color.bg} p-4 rounded-3xl border ${color.border}">
+            <div class="text-[10px] font-bold ${color.label} uppercase mb-1">Topic ${topicNum} / ${titleMatch[3]}</div>
+            <h3 class="font-bold text-slate-800 text-sm mb-2">${titleMatch[2]}</h3>
+            <p class="${color.desc} text-[11px]">${description}</p>
+        </div>`;
+      topicIndex++;
+    }
+  }
+
+  // 解析知识扩展 (## 四) - 添加颜色点交替
+  const highlightsMatch = markdownContent.match(/## 四、知识扩展亮点([\s\S]*?)(?=## 五、群内金句精选)/);
+  let highlightsHtml = '';
+  if (highlightsMatch) {
+    const highlightLines = highlightsMatch[1].trim().split('\n').filter(l => l.trim().startsWith('-'));
+    const dotColors = ['bg-green-400', 'bg-blue-400', 'bg-orange-400'];
+    highlightsHtml = highlightLines.map((line, idx) => {
+      // Extract the full text after the bullet point
+      let text = line.substring(2).trim(); // Remove "- "
+      // Remove markdown bold markers
+      text = text.replace(/\*\*/g, '');
+      // Remove the category label and colon if present (e.g., "深化理解: " or "深化理解：")
+      text = text.replace(/^[^：:]+[：:]\s*/, '');
+      const dotColor = dotColors[idx % dotColors.length];
+      return `<div class="highlight-item">
+                <div class="w-2 h-2 rounded-full ${dotColor}"></div>
+                <span class="text-sm font-bold text-slate-700">${text}</span>
+              </div>`;
+    }).join('');
+  }
+
+  // 解析 [QUOTE]
+  const quotes: Array<{ text: string, author: string, tag: string, think?: string }> = [];
+  const quoteRegex = /\[QUOTE\]([\s\S]*?)\[\/QUOTE\]/g;
+  let qMatch;
+
+  while ((qMatch = quoteRegex.exec(markdownContent)) !== null) {
+    const content = qMatch[1].trim();
+    const qTextMatch = content.match(/[「"'](.+?)[」"']\s*[—-]+\s*(.+?)(?:\n|$)/);
     const thinkMatch = content.match(/\*\*💡\s*思考[：:]\*\*\s*([\s\S]*?)$/);
 
-    if (quoteMatch) {
-      const quoteText = quoteMatch[1].trim();
-      const author = quoteMatch[2].trim();
-      const thinking = thinkMatch ? thinkMatch[1].trim() : '';
+    if (qTextMatch) {
+      quotes.push({
+        text: qTextMatch[1],
+        author: qTextMatch[2],
+        tag: '价值内化者',
+        think: thinkMatch ? thinkMatch[1].trim() : undefined
+      });
+    }
+  }
 
-      return `<div class="quote-card">
-        <div class="quote-text">「${quoteText}」</div>
-        <div class="quote-author">—— ${author}</div>
-        ${thinking ? `<div class="quote-thinking">${thinking}</div>` : ''}
+  // 如果少于3条金句，添加一个合成的"社群共识总结"
+  if (quotes.length > 0 && quotes.length < 3) {
+    quotes.push({
+      text: '学习思维模型，不是为了记住名字，而是为了看清因果。',
+      author: '社群共识总结',
+      tag: '集体智慧',
+    });
+  }
+
+  // 生成金句HTML
+  let quotesHtml = quotes.map((quote, idx) => {
+    const isConsensus = quote.author === '社群共识总结';
+    const style = isConsensus ? 'border-left-color: #64748b; opacity: 0.8;' : '';
+    const textColor = isConsensus ? 'style="color: #64748b; font-style: italic;"' : '';
+    const authorColor = isConsensus ? 'text-slate-500' : 'text-slate-900';
+
+    return `
+      <div class="quote-card" ${style ? `style="${style}"` : ''}>
+          <p class="quote-text" ${textColor}>「${quote.text}」</p>
+          <div class="quote-author">
+              <span class="font-black ${authorColor}">— ${quote.author}</span>
+              <span class="text-[10px] bg-white px-2 py-0.5 rounded-full border">${quote.tag}</span>
+          </div>
+          ${quote.think ? `<div class="mt-4 p-4 bg-white/50 rounded-2xl text-[12px] text-slate-500 leading-relaxed italic">💡 AI 思考: ${quote.think}</div>` : ''}
       </div>`;
-    }
-    return `<div class="quote-card">${content}</div>`;
-  });
+  }).join('');
 
-  // 处理 > 引用块
-  html = html.replace(/^>\s*\*\*(.+?):\*\*\s*["]?(.+?)["]?\s*$/gm,
-    '<div class="dialog-quote"><span class="dialog-author">$1:</span> "$2"</div>');
-  html = html.replace(/^>\s*(.+)$/gm, '<blockquote>$1</blockquote>');
+  // 解析行动建议 (## 六)
+  const actionMatch = markdownContent.match(/## 六、每日行动建议([\s\S]*?)(?=---|$)/);
+  let actionTitle = '保持复利思维，持续进化';
+  let actionSteps = '';
 
-  // 基础 Markdown 转 HTML
-  html = html
-    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/^- (.*$)/gim, '<li>$1</li>')
-    .replace(/^\d+\.\s+(.*$)/gim, '<li class="numbered">$1</li>')
-    .replace(/\n/g, '<br>');
+  if (actionMatch) {
+    let actionContent = actionMatch[1].trim();
 
-  return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>复利日知录精华报告 - ${date}</title>
-  <style>
-    :root {
-      --bg-dark: #0f1419;
-      --bg-card: #1a1f2e;
-      --bg-section: rgba(45, 55, 72, 0.5);
-      --bg-topic: rgba(30, 40, 55, 0.8);
-      --accent: #4fd1c5;
-      --accent-soft: #38b2ac;
-      --accent-pink: #f472b6;
-      --text-primary: #e2e8f0;
-      --text-secondary: #a0aec0;
-      --text-muted: #718096;
-      --border: rgba(255,255,255,0.06);
-      --quote-gold: #fbbf24;
+    // Filter out common prompt phrases that shouldn't appear in output
+    actionContent = actionContent
+      .replace(/^基于今天的讨论[，,].*?$/m, '')
+      .replace(/.*?可立即执行的小行动建议.*?$/m, '')
+      .replace(/^给出一个具体的.*?$/m, '')
+      .trim();
+
+    // 尝试提取标题和步骤
+    const lines = actionContent.split('\n').filter(l => l.trim());
+    if (lines.length > 0) {
+      // First non-empty line is the title, remove 【】 brackets if present
+      actionTitle = lines[0].replace(/\*\*/g, '').replace(/^【/, '').replace(/】$/, '').trim();
+
+      // 查找是否有步骤列表（格式：1. **步骤名** 或 **1. 步骤名** 或简单的数字列表）
+      const stepPattern = /(?:^|\n)\s*(?:\*\*)?(\d+)\.\s*(?:\*\*)?(.+?)(?:\*\*)?(?=\n|$)/g;
+      const stepMatches = [...actionContent.matchAll(stepPattern)];
+
+      if (stepMatches && stepMatches.length >= 3) {
+        const stepColors = ['text-green-400', 'text-blue-400', 'text-orange-400'];
+        actionSteps = `<div class="grid grid-cols-3 gap-4 mb-6">
+          ${stepMatches.slice(0, 3).map((match, idx) => {
+          const stepText = match[2].replace(/\*\*/g, '').trim();
+          return `<div>
+              <div class="${stepColors[idx]} font-black mb-1">Step ${idx + 1}</div>
+              <div class="text-[13px] text-white/70">${stepText}</div>
+            </div>`;
+        }).join('')}
+        </div>`;
+      }
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
-      background: var(--bg-dark);
-      min-height: 100vh;
-      padding: 16px;
-      line-height: 1.75;
-      color: var(--text-primary);
-      font-size: 15px;
-    }
-    .container {
-      max-width: 640px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      border-radius: 12px;
-      padding: 24px;
-    }
-    
-    /* 标题 */
-    h1 {
-      color: var(--accent);
-      font-size: 1.3em;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: 600;
-    }
-    h2 {
-      color: var(--text-primary);
-      font-size: 1.05em;
-      font-weight: 600;
-      margin: 24px 0 14px;
-      padding: 10px 14px;
-      background: var(--bg-section);
-      border-radius: 6px;
-      border-left: 3px solid var(--accent);
-    }
-    h3 {
-      color: var(--accent-pink);
-      font-size: 0.95em;
-      font-weight: 500;
-      margin: 18px 0 10px;
-      padding-left: 10px;
-      border-left: 2px solid var(--accent-pink);
-    }
-    
-    /* 统计卡片网格 */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 16px 0 20px;
-    }
-    .stat-item {
-      background: rgba(79, 209, 197, 0.08);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-      border: 1px solid var(--border);
-    }
-    .stat-value {
-      font-size: 2em;
-      font-weight: 700;
-      color: #a78bfa;
-    }
-    .stat-label {
-      font-size: 0.75em;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    
-    /* 话题卡片 */
-    .topic-card {
-      background: var(--bg-topic);
-      border-radius: 10px;
-      padding: 18px;
-      margin: 16px 0;
-      border: 1px solid var(--border);
-    }
-    .topic-card h3 {
-      color: var(--accent-pink);
-      margin: 0 0 12px 0;
-      padding: 0;
-      border: none;
-      font-size: 1em;
-    }
-    .topic-card li {
-      margin: 6px 0;
-      font-size: 0.9em;
-    }
-    
-    /* 对话引用 */
-    .dialog-quote {
-      background: rgba(255,255,255,0.04);
-      border-left: 2px solid var(--accent);
-      padding: 10px 14px;
-      margin: 10px 0;
-      border-radius: 0 6px 6px 0;
-      font-size: 0.88em;
-      color: var(--text-secondary);
-    }
-    .dialog-author {
-      color: var(--accent);
-      font-weight: 500;
-    }
-    
-    /* 金句卡片 */
-    .quote-card {
-      background: rgba(251, 191, 36, 0.06);
-      border-radius: 10px;
-      padding: 18px;
-      margin: 16px 0;
-      border: 1px solid rgba(251, 191, 36, 0.15);
-    }
-    .quote-text {
-      color: var(--quote-gold);
-      font-size: 1.05em;
-      font-weight: 500;
-      line-height: 1.6;
-      margin-bottom: 8px;
-    }
-    .quote-author {
-      color: var(--accent-pink);
-      font-size: 0.85em;
-      text-align: right;
-      margin-bottom: 12px;
-    }
-    .quote-thinking {
-      background: rgba(0,0,0,0.2);
-      border-radius: 6px;
-      padding: 12px;
-      font-size: 0.85em;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    
-    /* 列表 */
-    li {
-      margin: 8px 0;
-      padding-left: 16px;
-      list-style: none;
-      position: relative;
-      color: var(--text-secondary);
-      font-size: 0.92em;
-    }
-    li::before {
-      content: "•";
-      color: var(--accent);
-      position: absolute;
-      left: 0;
-    }
-    li.numbered::before { content: ""; }
-    
-    strong { color: var(--accent); font-weight: 500; }
-    em { color: var(--text-muted); font-style: normal; }
-    blockquote {
-      background: rgba(255,255,255,0.03);
-      border-left: 2px solid var(--accent);
-      padding: 8px 12px;
-      margin: 8px 0;
-      border-radius: 0 6px 6px 0;
-      font-size: 0.88em;
-      color: var(--text-secondary);
-    }
-    
-    .footer {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.7em;
-      margin-top: 24px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-    
-    /* 清理多余换行 */
-    br + br { display: none; }
-    h2 + br, h3 + br, li + br { display: none; }
-    .topic-card br + br { display: none; }
-    .quote-card br { display: none; }
-    .stats-grid + br { display: none; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    ${html}
-    <div class="footer">
-      由 AI 自动生成 · 复利日知录社群
-    </div>
-  </div>
-</body>
-</html>`;
+  }
+
+  // Use the new template system
+  const reportData: ReportData = {
+    date,
+    stats: statsHtml,
+    summary: summaryHtml,
+    topics: topicsHtml,
+    highlights: highlightsHtml,
+    quotes: quotesHtml,
+    actionTitle,
+    actionSteps
+  };
+
+  return generateTemplate(reportData);
 }
+
+
 
 
 
@@ -571,7 +514,8 @@ async function generateImageReport(htmlPath: string, outputPath: string) {
   try {
     const page = await browser.newPage();
     // 设置视口宽度，高度随意（后面会用 fullPage 截图）
-    await page.setViewport({ width: 680, height: 1000 });
+    // deviceScaleFactor: 3 提升清晰度到 3x (Retina 级别)
+    await page.setViewport({ width: 680, height: 1000, deviceScaleFactor: 3 });
 
     // 加载 HTML 文件
     const absoluteHtmlPath = path.resolve(htmlPath);

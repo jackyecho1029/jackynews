@@ -146,15 +146,29 @@ async function main() {
                 content = content.replace(/^[^:\n]+:\n/, '');
             }
 
+            // 清理 senderUsername：提取纯净的用户名（处理二进制前缀）
+            let cleanUsername = senderUsername;
+            // 1. 先尝试匹配 wxid 格式
+            const wxidMatch = senderUsername.match(/([Dd]?wxid_[a-zA-Z0-9]+)/);
+            if (wxidMatch) {
+                cleanUsername = wxidMatch[1];
+            } else {
+                // 2. 提取最后一段有效的用户名（字母数字下划线组成，至少4个字符）
+                const usernameMatch = senderUsername.match(/([a-zA-Z][a-zA-Z0-9_]{3,})$/);
+                if (usernameMatch) {
+                    cleanUsername = usernameMatch[1];
+                }
+            }
+
             // 查找联系人信息
-            const senderInfo = contactByUsername.get(senderUsername);
+            const senderInfo = contactByUsername.get(cleanUsername) || contactByUsername.get(senderUsername);
 
             let displayName = senderInfo?.remark || senderInfo?.nickname;
             if (!displayName) {
-                displayName = userAliases.get(senderUsername);
+                displayName = userAliases.get(cleanUsername) || userAliases.get(senderUsername);
             }
             if (!displayName) {
-                displayName = isWxidFormat(senderUsername) ? '群成员' : (senderUsername || '群成员');
+                displayName = isWxidFormat(cleanUsername) ? '群成员' : (cleanUsername || '群成员');
             }
 
             return {

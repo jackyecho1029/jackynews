@@ -42,11 +42,19 @@ jobs:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
         run: npm run analyze-gems
 
-      - name: Commit and Push Changes
+      - name: Commit and Push Submodule Changes
         working-directory: ./potatoblog
         run: |
           git config --global user.name "Gem Hunter Bot"
           git config --global user.email "bot@potatoblog.ai"
           git add reports/gems/ posts/
-          git commit -m "auto: weekly hidden gems update [$(date +%Y-%m-%d)]" || echo "No changes to commit"
+          git commit -m "auto: weekly hidden gems update [$(date +%Y-%m-%d)]" || exit 0
+          git push origin HEAD:main
+
+      - name: Update Submodule Reference in Parent
+        run: |
+          git config --global user.name "Gem Hunter Bot"
+          git config --global user.email "bot@potatoblog.ai"
+          git add potatoblog
+          git commit -m "auto: update potatoblog submodule pointer [$(date +%Y-%m-%d)]" || exit 0
           git push origin main

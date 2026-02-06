@@ -9,9 +9,17 @@ license: Proprietary
 ## Overview
 
 This skill standardizes the daily processing of WeChat group chat history. It transforms raw chat logs into a set of polished deliverables:
-1.  **Daily Report**: A visual HTML dashboard and a shareable PNG long image.
-2.  **Journal Publication**: An updated markdown index with daily golden quotes and action advice.
+1.  **Daily Report**: A professional "Pro Max" poster (HTML) and a high-res PNG long image optimized for mobile sharing.
+2.  **Journal Publication**: An updated markdown index with aggregated daily golden quotes.
 3.  **Operations Report**: A cumulative analysis of user activity and community health.
+
+**Design Standard**: The HTML poster uses a fixed, approved template (`scripts/html-template.ts`) based on the reference design from conversation 4804d0b7. The template features:
+- 640px fixed width for consistent PNG export
+- **3x device scale factor** for Retina-quality PNG output
+- WeChat green (#07C160) gradient header with stats grid overlay
+- 2-column topic grid with alternating colors (green/blue/orange)
+- 3-quote display with automatic fallback for "社群共识总结"
+- Color-coordinated highlight dots and action step layout
 
 ## Prerequisites
 
@@ -164,9 +172,18 @@ To maintain and troubleshoot the extraction script (`extract-from-db.ts`), note 
 ## Verification
 
 After running the workflow, verify the following:
-1.  **Check Labels**: Ensure reports show friendly names or "群成员" instead of raw wxid strings.
-2.  **Check Image**: Open the generated PNG in `reports/[DATE]/` to ensure layout and rendering are correct.
-3.  **Check Index**: Open `journal/[YYYY-MM]-index.md` to see if the new date appears with a correct summary quote.
+1.  **Check Design Consistency**: Open the HTML report and compare it to the reference template:
+    - Header gradient and EFFICIENCY badge are properly positioned
+    - Stats grid overlaps header by 50% (transform: translateY(-50%))
+    - Topic cards use alternating green/blue(/orange) color schemes
+    - 3 quote cards are displayed (including fallback if needed)
+    - Action banner has clean structured layout
+2.  **Check Image Quality**: Open the generated PNG in `reports/[DATE]/` to ensure:
+    - High resolution (3x scale)
+    - All sections are visible and properly formatted
+    - "Save as PNG" button is hidden from the export
+3.  **Check Stats**: Ensure message counts, active user numbers, and topic counts are correctly extracted and displayed.
+4.  **Check Content Parsing**: Verify that AI-generated content (summary, topics, highlights, quotes) is properly extracted from markdown and inserted into the template.
 
 ## Troubleshooting
 

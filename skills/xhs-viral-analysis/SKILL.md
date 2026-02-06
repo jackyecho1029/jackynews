@@ -50,15 +50,17 @@ D:\Antigravity\Jackypotato\
 
 ### 第一步: 抓取小红书数据
 
-#### 1.1 启动 MediaCrawler
+#### 1.1 启动全自动抓取与分析
 
 ```bash
 cd D:\Antigravity\Jackypotato\tools\MediaCrawler
 
-# 激活虚拟环境 (如果有)
-# 运行抓取脚本
-py -3 main.py --platform xhs --lt qrcode --type search
+# 运行一键式全自动脚本 (包含抓取 + AI 深度分析)
+py -3 auto_viral_pipeline.py -k "你的关键词"
 ```
+
+> [!TIP]
+> 你也可以直接运行目录下的 `run_xhs_search.bat` 文件，它现在已经升级为全自动模式。
 
 #### 1.2 输入搜索关键词
 
@@ -81,30 +83,23 @@ AI工具
 
 ---
 
-### 第二步: 运行深度分析
+---
+
+## 快捷命令
+
+### 一键全自动分析 (推荐)
 
 ```bash
-cd D:\Antigravity\Jackypotato\tools\MediaCrawler
-
-# 分析指定关键词的 Top 10 帖子
-py -3 deep_viral_analysis.py -k "一人公司" -n 10
+# 直接输入关键词，自动完成 [爬取 -> 清洗 -> AI分析 -> 生成报告]
+py -3 auto_viral_pipeline.py -k "一人公司"
 ```
 
-#### 参数说明
+### 仅运行深度分析
 
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
-| `-k, --keyword` | 要分析的关键词 | 必填 |
-| `-n, --top` | 分析 Top N 帖子 | 10 |
-| `-i, --input` | 输入JSON文件路径 | 自动选择最新 |
-| `-c, --comments` | 评论JSON文件路径 | 自动选择最新 |
-| `-o, --output` | 输出目录 | `data/xhs/analysis/` |
-
-#### 输出文件
-
-分析完成后生成：
-- `data/xhs/analysis/[关键词]_deep_analysis_YYYY-MM-DD.md`
-- `data/xhs/analysis/[关键词]_deep_analysis_YYYY-MM-DD.html`
+如果你已经有抓取好的数据，只想重新运行分析：
+```bash
+py -3 deep_viral_analysis.py -k "一人公司"
+```
 
 ---
 
