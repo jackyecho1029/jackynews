@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 熠川行年度经营规划 - Echo Executive Presentation v2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;600&family=Noto+Serif+SC:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FAF9F6;
+            --accent: #F1E5AC;
+            --text: #2D3436;
+            --secondary: #A8A8A8;
+            --chart1: rgba(241, 229, 172, 0.8);
+            --chart2: rgba(45, 52, 54, 0.6);
+            --chart3: rgba(168, 168, 168, 0.4);
+        }
+
+        body {
+            font-family: 'Montserrat', 'Noto Serif SC', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            box-sizing: border-box;
+            position: relative;
+            background: radial-gradient(circle at top right, #fffdf8, transparent);
+            overflow-y: auto;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        .active .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.4s;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(45, 52, 54, 0.05);
+            border-radius: 12px;
+        }
+
+        .accent-line {
+            width: 60px;
+            height: 1.5px;
+            background-color: var(--accent);
+            margin: 1rem 0;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+            z-index: 101;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid var(--accent);
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        tr:hover {
+            background: rgba(241, 229, 172, 0.05);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 260px;
+            width: 100%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="slide-container" id="container">
+        <!-- Slide 1: Cover -->
+        <section class="slide active">
+            <div class="max-w-4xl text-center">
+                <span class="text-secondary tracking-[0.6em] text-xs mb-8 block uppercase fade-in">2026 Strategy &
+                    2025 Analytics</span>
+                <h1 class="serif text-8xl font-semibold mb-4 leading-tight fade-in delay-1">熠川行<br><span
+                        class="italic text-secondary">ANNUAL REVIEW</span></h1>
+                <div class="flex justify-center">
+                    <div class="accent-line fade-in delay-2"></div>
+                </div>
+                <p class="text-secondary tracking-[0.3em] text-lg serif italic fade-in delay-2">熠光同行，川流不息，行则必至</p>
+            </div>
+            <div class="absolute bottom-12 left-12 fade-in delay-3 text-xs tracking-widest uppercase text-secondary">
+                For Internal Executive Briefing | 2026.02.11
+            </div>
+        </section>
+
+        <!-- Slide 2: 2025 Market Landscape (Table-Centric) -->
+        <section class="slide">
+            <div class="max-w-6xl w-full">
+                <div class="flex justify-between items-end mb-10 fade-in">
+                    <div>
+                        <span class="text-5xl serif italic text-secondary block mb-2">01.</span>
+                        <h2 class="text-4xl font-semibold tracking-tighter">市场格局：向外看</h2>
+                    </div>
+                    <div class="text-[10px] tracking-widest text-secondary uppercase pb-1">2025 E-commerce Data Overview
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-8 mb-8">
+                    <div class="col-span-2 glass-card p-6 fade-in delay-1">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>平台</th>
+                                    <th>大盘 GMV (亿)</th>
+                                    <th>大盘增速</th>
+                                    <th>女装 GMV (亿)</th>
+                                    <th>女装占比</th>
+                                    <th>女装增速</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr>
+                                    <td>天猫</td>
+                                    <td>83,000</td>
+                                    <td>6%</td>
+                                    <td>19,920</td>
+                                    <td>24.0%</td>
+                                    <td>15.8%</td>
+                                </tr>
+                                <tr>
+                                    <td>抖音</td>
+                                    <td>43,000</td>
+                                    <td>30%</td>
+                                    <td>13,000</td>
+                                    <td class="text-[#D4AF37] font-bold">30.2%</td>
+                                    <td>26%</td>
+                                </tr>
+                                <tr>
+                                    <td>拼多多</td>
+                                    <td>58,000</td>
+                                    <td>13%</td>
+                                    <td>5,220</td>
+                                    <td>9.0%</td>
+                                    <td>15.2%</td>
+                                </tr>
+                                <tr>
+                                    <td>视频号</td>
+                                    <td>5,000</td>
+                                    <td>110%</td>
+                                    <td>1,000</td>
+                                    <td>20.0%</td>
+                                    <td class="text-[#D4AF37] font-bold">+120%</td>
+                                </tr>
+                                <tr>
+                                    <td>小红书</td>
+                                    <td>1,400</td>
+                                    <td>75%</td>
+                                    <td>700</td>
+                                    <td>50.0%</td>
+                                    <td>+90%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="glass-card p-6 fade-in delay-2">
+                        <h4 class="serif italic mb-4 text-xs tracking-widest uppercase">Platform Growth Comparison</h4>
+                        <div class="chart-container">
+                            <canvas id="marketChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="fade-in delay-3 text-sm tracking-wide italic text-secondary border-l-2 border-accent pl-4">
+                    * 核心发现：视频号与小红书增速极快，是 2026 年设计师品牌必须深耕的流量池。
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Slide 3: Category Deep Dive (New) -->
+        <section class="slide">
+            <div class="max-w-7xl w-full">
+                <div class="flex justify-between items-end mb-8 fade-in">
+                    <div>
+                        <span class="text-5xl serif italic text-secondary block mb-2">02.</span>
+                        <h2 class="text-4xl font-semibold tracking-tighter">抖音女装赛道：类目深潜</h2>
+                    </div>
+                    <div class="text-[10px] tracking-widest text-secondary uppercase pb-1">2025 Level 1 Category Deep
+                        Dive</div>
+                </div>
+
+                <div class="glass-card p-6 fade-in delay-1 overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead>
+                            <tr>
+                                <th class="w-24">一级类目</th>
+                                <th>GMV (亿)</th>
+                                <th>占比</th>
+                                <th>增速</th>
+                                <th class="w-48">核心渠道占比</th>
+                                <th>核心价格带</th>
+                                <th>爆款特征</th>
+                                <th>退货率</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs">
+                            <tr>
+                                <td class="font-semibold">连衣裙/套装</td>
+                                <td>3,200</td>
+                                <td>24.6%</td>
+                                <td class="text-emerald-600 font-bold">+18%</td>
+                                <td>直播45% / 短视频35%</td>
+                                <td>中高端</td>
+                                <td>通勤/轻熟风，轻奢款增速快</td>
+                                <td>40%-50%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">T恤/衬衫/上衣</td>
+                                <td>2,600</td>
+                                <td>20.0%</td>
+                                <td class="text-emerald-600 font-bold">+15%</td>
+                                <td>直播40% / 短视频30%</td>
+                                <td>全价格带</td>
+                                <td>基础款走量，小众设计款溢价</td>
+                                <td>50%-60%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">裤子/半身裙</td>
+                                <td>2,300</td>
+                                <td>17.7%</td>
+                                <td class="text-emerald-600 font-bold">+20%</td>
+                                <td>直播42% / 短视频32%</td>
+                                <td>平价/中高端</td>
+                                <td>高腰显瘦、职场西装、A字裙</td>
+                                <td>45%-55%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold text-accent">内衣裤袜</td>
+                                <td>1,800</td>
+                                <td>13.8%</td>
+                                <td class="text-[#D4AF37] font-bold">+250%</td>
+                                <td>直播50% / 短视频40%</td>
+                                <td>平价/中高端</td>
+                                <td>舒适功能款，视频转化强</td>
+                                <td>30%-40%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">运动户外女装</td>
+                                <td>1,500</td>
+                                <td>11.5%</td>
+                                <td class="text-emerald-600 font-bold">+58%</td>
+                                <td>直播48% / 短视频38%</td>
+                                <td>中高端</td>
+                                <td>功能面料，多场景穿搭</td>
+                                <td>25%-35%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">外套/大衣/羽绒</td>
+                                <td>1,200</td>
+                                <td>9.2%</td>
+                                <td class="text-emerald-600 font-bold">+22%</td>
+                                <td>直播52% / 短视频35%</td>
+                                <td>高客单</td>
+                                <td>千元以上毛呢/轻奢款增速显著</td>
+                                <td>20%-30%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold text-secondary">其他</td>
+                                <td>400</td>
+                                <td>3.2%</td>
+                                <td class="text-emerald-600 font-bold">+10%</td>
+                                <td>直播35% / 短视频45%</td>
+                                <td>高客单</td>
+                                <td>场景小众，客单高、复购低</td>
+                                <td>35%-45%</td>
+                            </tr>
+                            <tr class="bg-accent/5 border-t-2 border-accent text-secondary">
+                                <td class="font-bold">大盘合计</td>
+                                <td class="font-bold">13,000</td>
+                                <td class="font-bold">100%</td>
+                                <td class="font-bold text-accent">+26%</td>
+                                <td>直播45% / 短视频35%</td>
+                                <td>-</td>
+                                <td class="italic">消费升级，高客单占比提升</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    class="mt-4 fade-in delay-2 text-xs tracking-wide italic text-secondary border-l-2 border-accent pl-4">
+                    * 战略洞察：内衣裤袜 (+250%) 与 户外女装 (+58%) 增速领跑，是 2026 年品牌矩阵扩张的高潜方向。
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Monthly Trend (Combo Chart) -->
+        <section class="slide">
+            <div class="max-w-6xl w-full">
+                <div class="flex justify-between items-end mb-8 fade-in">
+                    <div>
+                        <span class="text-5xl serif italic text-secondary block mb-2">03.</span>
+                        <h2 class="text-4xl font-semibold tracking-tighter">业绩盘点：月度趋势</h2>
+                    </div>
+                    <p class="text-xs text-secondary italic">2025.03 - 2025.12 Monthly GMV & Settlement Analysis</p>
+                </div>
+
+                <div class="glass-card p-8 mb-8 fade-in delay-1">
+                    <div class="chart-container" style="height: 380px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-6 fade-in delay-2">
+                    <div class="glass-card p-5">
+                        <p class="text-xs text-secondary tracking-widest mb-1">年度峰值 GMV (12月)</p>
+                        <p class="text-3xl font-semibold">¥4.81M</p>
+                    </div>
+                    <div class="glass-card p-5">
+                        <p class="text-xs text-secondary tracking-widest mb-1">最高月订单 (7月)</p>
+                        <p class="text-3xl font-semibold">5,311</p>
+                    </div>
+                    <div class="glass-card p-5 border-b-4 border-accent">
+                        <p class="text-xs text-secondary tracking-widest mb-1">年度平均结算率</p>
+                        <p class="text-3xl font-semibold text-[#D4AF37]">20.3%</p>
+                    </div>
+                    <div class="glass-card p-5">
+                        <p class="text-xs text-secondary tracking-widest mb-1">总已结算收益</p>
+                        <p class="text-3xl font-semibold">¥1.22M</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Category Dimensions -->
+        <section class="slide">
+            <div class="max-w-6xl w-full">
+                <div class="flex items-center gap-4 mb-10 fade-in">
+                    <span class="text-5xl serif italic text-secondary">04.</span>
+                    <h2 class="text-4xl font-semibold tracking-tight">品类维度：多元化路径</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-12">
+                    <div class="glass-card p-8 fade-in delay-1">
+                        <div class="chart-container" style="height: 320px;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card p-8 fade-in delay-2">
+                        <h4 class="serif italic text-lg mb-6 border-b border-accent pb-2">Category Performance Detail
+                        </h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>品类</th>
+                                    <th>订单数</th>
+                                    <th>GMV (¥)</th>
+                                    <th>成交占比</th>
+                                    <th class="text-right">结算率</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr>
+                                    <td class="font-semibold">女装 (Apparel)</td>
+                                    <td>29,798</td>
+                                    <td>22.88M</td>
+                                    <td>85.7%</td>
+                                    <td class="text-right font-bold text-[#D4AF37]">19.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>配饰 (Acc)</td>
+                                    <td>2,260</td>
+                                    <td>1.98M</td>
+                                    <td>7.4%</td>
+                                    <td class="text-right">22.6%</td>
+                                </tr>
+                                <tr>
+                                    <td>女鞋 (Shoes)</td>
+                                    <td>1,784</td>
+                                    <td>1.26M</td>
+                                    <td>4.7%</td>
+                                    <td class="text-right">27.9%</td>
+                                </tr>
+                                <tr>
+                                    <td>女包 (Bags)</td>
+                                    <td>671</td>
+                                    <td>0.44M</td>
+                                    <td>1.7%</td>
+                                    <td class="text-right">25.1%</td>
+                                </tr>
+                                <tr>
+                                    <td>美妆个护 (Beauty)</td>
+                                    <td>302</td>
+                                    <td>0.12M</td>
+                                    <td>0.5%</td>
+                                    <td class="text-right text-emerald-600">28.3%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div
+                            class="mt-8 p-5 bg-accent/10 border-l-4 border-accent text-sm leading-relaxed italic text-secondary">
+                            除绝对主力的女装外，配饰与女靴的表现优于预期，2026 年可增加该类目精选品牌的合作密度。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Strategic Review & Brand Matrix -->
+        <section class="slide">
+            <div class="max-w-6xl w-full">
+                <div class="flex justify-between items-end mb-8 fade-in">
+                    <div>
+                        <span class="text-5xl serif italic text-secondary block mb-2">05.</span>
+                        <h2 class="text-4xl font-semibold tracking-tight">品牌策略复盘：数据洞察</h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-8 h-[540px]">
+                    <!-- Column 1: Core Insights -->
+                    <div class="col-span-4 glass-card p-10 border-l-8 border-accent fade-in delay-1 overflow-y-auto">
+                        <h3
+                            class="serif italic text-2xl mb-8 font-bold text-text underline underline-offset-8 decoration-accent/30">
+                            从数据经营看策略</h3>
+                        <div class="space-y-8">
+                            <div class="p-6 bg-accent/5 rounded-xl border border-accent/20">
+                                <p class="font-bold text-lg text-text mb-2 tracking-tight">📈 佣金潜力提升</p>
+                                <p class="text-[13px] text-secondary leading-relaxed">
+                                    当前净佣金率约为 <span class="text-text font-bold">19%</span>（已扣除平台费），仍存在较大提升空间。目标提升 <span
+                                        class="text-text font-bold">3-5%</span>。
+                                </p>
+                            </div>
+                            <div class="p-6 bg-accent/5 rounded-xl border border-accent/20">
+                                <p class="font-bold text-lg text-text mb-2 tracking-tight">🎯 结算效率攻坚</p>
+                                <p class="text-[13px] text-secondary leading-relaxed">20% VS 大盘
+                                    25%。方向：1.人均试样精准度；2.增加高结算场次；3.高结算品类入局；4.强化人设内容。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Brand Matrix (Redesigned for Vertical Flow & Large Fonts) -->
+                    <div class="col-span-8 grid grid-cols-2 gap-6 fade-in delay-2">
+                        <!-- A. 自带流量型 -->
+                        <div
+                            class="glass-card p-8 bg-blue-50/20 border-t-4 border-blue-400/60 transition-transform hover:scale-[1.02]">
+                            <p
+                                class="font-bold text-sm mb-6 text-blue-900 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <span class="w-1.5 h-6 bg-blue-400 rounded-full"></span> a. 自带流量型品牌
+                            </p>
+                            <div class="flex flex-col gap-2 text-sm text-text font-semibold leading-none">
+                                <span>65lab</span>
+                                <span>AAAD</span>
+                                <span>ABT</span>
+                                <span>野兽小姐</span>
+                                <span>付智恩</span>
+                                <span>COCO / <span class="text-secondary font-normal italic">等高活品牌</span></span>
+                            </div>
+                        </div>
+
+                        <!-- B. 高结算率型 -->
+                        <div
+                            class="glass-card p-8 bg-emerald-50/20 border-t-4 border-emerald-400/60 transition-transform hover:scale-[1.02]">
+                            <p
+                                class="font-bold text-sm mb-6 text-emerald-900 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <span class="w-1.5 h-6 bg-emerald-400 rounded-full"></span> b. 高结算率品牌
+                            </p>
+                            <div class="flex flex-col gap-2 text-sm text-text font-semibold leading-none">
+                                <span>欧阳丹</span>
+                                <span>unrestrain</span>
+                                <span>echoade</span>
+                                <span>beau today</span>
+                                <span>AYUKO</span>
+                                <span>VERMO</span>
+                            </div>
+                        </div>
+
+                        <!-- C. 高佣金型 -->
+                        <div
+                            class="glass-card p-8 bg-amber-50/10 border-t-4 border-accent transition-transform hover:scale-[1.02] overflow-y-auto">
+                            <p
+                                class="font-bold text-sm mb-6 text-amber-900 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <span class="w-1.5 h-6 bg-accent rounded-full"></span> c. 高佣金品牌
+                            </p>
+                            <div
+                                class="grid grid-cols-2 gap-x-4 gap-y-2 text-[13px] text-text font-semibold leading-none">
+                                <span>senseaweek</span>
+                                <span>aimme sparrow</span>
+                                <span>LOOKNOW</span>
+                                <span>Leewei</span>
+                                <span>rawveil</span>
+                                <span>keepsolo</span>
+                                <span>monsterming</span>
+                                <span>ishouyue</span>
+                            </div>
+                        </div>
+
+                        <!-- D. 调性类品牌 -->
+                        <div
+                            class="glass-card p-8 bg-[#2D3436] text-white border-t-4 border-accent transition-transform hover:scale-[1.02] overflow-y-auto">
+                            <p
+                                class="font-bold text-sm mb-6 text-accent uppercase tracking-[0.2em] flex items-center gap-2">
+                                ✨ d. 调性类品牌
+                            </p>
+                            <div
+                                class="grid grid-cols-2 gap-x-2 gap-y-2 text-[12px] text-slate-200 font-medium leading-none">
+                                <span>Mim balanche</span>
+                                <span>ATERLIER MISSLU</span>
+                                <span>SOLSOL</span>
+                                <span>ICE DUST</span>
+                                <span>CELLO SONATA</span>
+                                <span>XUZHI</span>
+                                <span>JACQUES WEI</span>
+                                <span>涂月</span>
+                                <span class="col-span-2 text-accent italic">SHANG1BYSHANG1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Brand Top 30 Performance (Full Chart) -->
+        <section class="slide">
+            <div class="max-w-7xl w-full">
+                <div class="flex justify-between items-end mb-6 fade-in">
+                    <div>
+                        <span class="text-5xl serif italic text-secondary block mb-2">06.</span>
+                        <h2 class="text-3xl font-semibold tracking-tighter uppercase">TOP 30 品牌深度盘点</h2>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 fade-in delay-1 mb-6" style="height: 520px;">
+                    <div class="chart-container" style="height: 100%;">
+                        <canvas id="brandChart"></canvas>
+                    </div>
+                </div>
+
+                <div
+                    class="flex gap-12 text-[9px] fade-in delay-2 tracking-widest text-secondary uppercase justify-center">
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 bg-[#A8D5E2] rounded-sm"></span> GMV (Bar)
+                    </div>
+                    <div class="flex items-center gap-2"><span class="w-3 h-[2px] bg-[#E8B4B8]"></span> 结算率 % (Line)
+                    </div>
+                    <div class="flex items-center gap-2"><span class="w-3 h-[2px] bg-[#2D3436]"></span> 佣金率 % (Line)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: 2026 Trends -->
+        <section class="slide">
+            <div class="max-w-7xl w-full">
+                <div class="flex items-center gap-4 mb-8 fade-in">
+                    <span class="text-5xl serif italic text-secondary">07.</span>
+                    <h2 class="text-4xl font-semibold tracking-tight">2026 抖音新趋势推演</h2>
+                </div>
+                <!-- Updated Layout to fit detailed content -->
+                <!-- Updated Layout to fit detailed content with larger font -->
+                <div class="grid grid-cols-3 gap-6 fade-in delay-1 h-[520px]">
+
+                    <!-- 1. 全域内容化 -->
+                    <div
+                        class="glass-card p-6 border-l-8 border-accent hover:bg-white/60 transition-all hover:-translate-y-1">
+                        <h4 class="text-xl font-bold mb-4 text-text">全域内容化</h4>
+                        <p class="text-sm text-secondary leading-relaxed mb-3 font-bold">流量不再只看直播间，转向短视频+商品卡+直播全域考核。</p>
+                        <p class="text-sm text-secondary leading-relaxed opacity-90">
+                            新粉3秒停留、内容力权重飙升。纯“马扁”收割型账号被淘汰，场景化、真实体验内容成留存转化关键。
+                        </p>
+                    </div>
+
+                    <!-- 2. 垂类极致化 -->
+                    <div
+                        class="glass-card p-6 border-t-8 border-accent hover:bg-white/60 transition-all hover:-translate-y-1">
+                        <h4 class="text-xl font-bold mb-4 text-text">垂类极致化</h4>
+                        <p class="text-sm text-secondary leading-relaxed mb-3 font-bold">泛穿搭账号流量被挤压，细分赛道更易起量。</p>
+                        <p class="text-sm text-secondary leading-relaxed opacity-90">
+                            如大码通勤、轻熟职场、户外机能、孕哺女装、银发优雅等。达人靠专业度与人群粘性形成壁垒。
+                        </p>
+                    </div>
+
+                    <!-- 3. 风格真实化 -->
+                    <div
+                        class="glass-card p-6 border-b-8 border-accent hover:bg-white/60 transition-all hover:-translate-y-1">
+                        <h4 class="text-xl font-bold mb-4 text-text">风格真实化</h4>
+                        <p class="text-sm text-secondary leading-relaxed mb-3 font-bold">平台严打过度美颜与身材扭曲，真实展示成标配。</p>
+                        <p class="text-sm text-secondary leading-relaxed opacity-90">
+                            “淡彩欧若风”等舒适自然风格持续走高。多元审美（微胖、小众设计）受鼓励，退货率与口碑成为长期流量标尺。
+                        </p>
+                    </div>
+
+                    <!-- 4. 品类品质化 -->
+                    <div
+                        class="glass-card p-6 bg-[#2D3436] text-white hover:bg-[#2D3436]/90 transition-all hover:-translate-y-1">
+                        <h4 class="text-xl font-bold mb-4 text-accent">品类品质化</h4>
+                        <p class="text-sm text-gray-200 leading-relaxed mb-3 font-bold">从“拼低价”转向“讲价值”。</p>
+                        <p class="text-sm text-gray-300 leading-relaxed opacity-90">
+                            中高端女装复购率提升，平价基础款走极致性价比，高客单重设计与面料。现货与库存深度成为硬性要求，发货后GMV权重更高。
+                        </p>
+                    </div>
+
+                    <!-- 5. IP人格化 -->
+                    <div class="glass-card p-6 bg-accent/10 hover:bg-accent/20 transition-all hover:-translate-y-1">
+                        <h4 class="text-xl font-bold mb-4 text-text">IP 人格化</h4>
+                        <p class="text-sm text-secondary leading-relaxed mb-3 font-bold">创始人IP、主理人型达人崛起。</p>
+                        <p class="text-sm text-secondary leading-relaxed opacity-90">
+                            靠情感绑定+供应链能力突围。如美羊等年GMV破5亿，线下门店反哺线上品牌升维，用户信任度是核心壁垒。
+                        </p>
+                    </div>
+
+                    <!-- 6. 技术工具化 -->
+                    <div
+                        class="glass-card p-6 border-r-8 border-accent hover:bg-white/60 transition-all hover:-translate-y-1">
+                        <h4 class="text-xl font-bold mb-4 text-text">技术工具化</h4>
+                        <p class="text-sm text-secondary leading-relaxed mb-3 font-bold">AI剪辑、AR试穿、直播切片成标配。</p>
+                        <p class="text-sm text-secondary leading-relaxed opacity-90">
+                            切片授权开放、矩阵运营提效，AI辅助内容测试与流量优化，降低新人入局门槛，放大优质内容的转化效率。
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: 2026 Strategy ONE PAGE -->
+        <section class="slide">
+            <div class="max-w-7xl w-full">
+                <div class="flex justify-between items-end mb-8 fade-in">
+                    <div>
+                        <span class="text-5xl serif italic text-secondary block mb-2">08.</span>
+                        <h2 class="text-4xl font-semibold tracking-tighter">2026 经营策略</h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 mb-8 fade-in delay-1">
+                    <div class="glass-card p-8 border-l-8 border-accent">
+                        <h3 class="text-lg font-bold mb-2 uppercase tracking-widest text-secondary">核心策略</h3>
+                        <p class="text-2xl font-serif italic text-text">双轮驱动，长效发展</p>
+                    </div>
+                    <div class="glass-card p-8 border-l-8 border-[#2D3436]">
+                        <h3 class="text-lg font-bold mb-2 uppercase tracking-widest text-secondary">年度目标</h3>
+                        <ul class="list-disc pl-4 space-y-2 text-sm text-text font-medium">
+                            <li><span class="font-bold">主账号（董赫和Echo）</span>：实现 GMV / 佣金收入翻倍增长。</li>
+                            <li><span class="font-bold">矩阵建设</span>：打造多矩阵账号，实现复利效应。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-12 gap-y-8 fade-in delay-2 mt-4">
+                    <!-- Account 1 -->
+                    <div class="relative pl-6 border-l-2 border-accent">
+                        <div
+                            class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-accent border-4 border-white shadow-sm">
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-[#2D3436]">董赫和Echo <span
+                                class="text-sm font-normal text-secondary ml-2 bg-white/50 px-2 py-0.5 rounded-md border border-gray-100">主账号</span>
+                        </h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">CONTENT DIRECTION
+                                </p>
+                                <p class="text-sm font-medium text-text">直播引流、口播分享、平台热点</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">MONETIZATION
+                                    </p>
+                                    <p class="text-sm text-secondary">直播 / 短视频 / 橱窗</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">TEAM</p>
+                                    <p class="text-sm text-secondary">商务(Echo/招人) / 摄剪(外包/三毛)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account 2 -->
+                    <div class="relative pl-6 border-l-2 border-accent/40">
+                        <div
+                            class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gray-200 border-4 border-white shadow-sm">
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-[#2D3436]">董赫（的穿搭）</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">CONTENT DIRECTION
+                                </p>
+                                <p class="text-sm font-medium text-text">图文类（日常/直播产品）</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">MONETIZATION
+                                    </p>
+                                    <p class="text-sm text-secondary">短视频 / 橱窗挂链</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">TEAM</p>
+                                    <p class="text-sm text-secondary">中控 / 助理（三毛/妹妹）</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account 3 -->
+                    <div class="relative pl-6 border-l-2 border-accent/40">
+                        <div
+                            class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gray-200 border-4 border-white shadow-sm">
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-[#2D3436]">你们的 Echo 姐</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">CONTENT DIRECTION
+                                </p>
+                                <p class="text-sm font-medium text-text">女性创业、直播教学、日常穿搭</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">MONETIZATION
+                                    </p>
+                                    <p class="text-sm text-secondary">橱窗 / 知识付费</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-[#A8A8A8] mb-1">TEAM</p>
+                                    <p class="text-sm text-secondary">摄像剪辑（三毛）</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account 4 -->
+                    <div class="relative pl-6 border-l-2 border-emerald-400/50 bg-emerald-50/30 rounded-r-xl py-2 pr-4">
+                        <div
+                            class="absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-emerald-400 border-4 border-white shadow-sm">
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-emerald-900">孵化新号 <span
+                                class="text-xs font-normal text-white ml-2 bg-emerald-500 px-2 py-0.5 rounded-full">NEW</span>
+                        </h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-emerald-700/60 mb-1">CONTENT
+                                    DIRECTION</p>
+                                <p class="text-sm font-medium text-emerald-800">女装类达人直播带货</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-emerald-700/60 mb-1">
+                                        MONETIZATION</p>
+                                    <p class="text-sm text-emerald-800">直播带货</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-emerald-700/60 mb-1">TEAM</p>
+                                    <p class="text-sm text-emerald-800">中控 / 商务助理</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="max-w-5xl text-center">
+                <div class="serif text-8xl font-semibold mb-12 fade-in">
+                    <span class="text-secondary opacity-20 hover:opacity-100 transition-opacity">熠</span>光同<span
+                        class="italic">行</span><br>
+                    <span class="text-secondary opacity-40">川流</span>不息<br>
+                    <span class="italic text-accent">行则必至</span>
+                </div>
+                <div class="flex justify-center">
+                    <div class="accent-line fade-in delay-1 w-32"></div>
+                </div>
+                <p class="text-secondary tracking-[0.8em] text-[10px] fade-in delay-2 uppercase mt-8 font-semibold">2026
+                    Echo Annual Strategy</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="nav-controls">
+        <div class="nav-btn" onclick="prevSlide()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6" />
+            </svg></div>
+        <div class="nav-btn" onclick="nextSlide()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6" />
+            </svg></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('container');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgress() {
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function showSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= slides.length) index = slides.length - 1;
+            slides.forEach(s => s.classList.remove('active'));
+            slides[index].classList.add('active');
+            container.style.transform = `translateX(-${index * 100}vw)`;
+            currentSlide = index;
+            updateProgress();
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Chart.js Implementations
+        // 1. Market Growth Chart
+        new Chart(document.getElementById('marketChart'), {
+            type: 'bar',
+            data: {
+                labels: ['天猫', '抖音', 'PDD', '视频号', '小红书'],
+                datasets: [{
+                    label: '女装 GMV 增速 (%)',
+                    data: [15.8, 26, 15.2, 120, 90],
+                    backgroundColor: ['#2D3436', '#F1E5AC', '#2D3436', '#D4AF37', '#F1E5AC'],
+                    borderRadius: 4
+                }]
+            },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 11 } } }, y: { grid: { display: false }, ticks: { font: { size: 12 } } } } }
+        });
+
+        // 2. Trend Combo Chart (Bar + Line)
+        new Chart(document.getElementById('trendChart'), {
+            type: 'bar',
+            data: {
+                labels: ['3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: '月度总 GMV (k)',
+                        data: [465, 1787, 2553, 1782, 3135, 2372, 2299, 2790, 4706, 4816],
+                        backgroundColor: 'rgba(45, 52, 54, 0.1)',
+                        borderColor: '#2D3436',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        type: 'bar',
+                        label: '已结算成交 (k)',
+                        data: [150, 410, 438, 395, 662, 570, 612, 589, 860, 725],
+                        backgroundColor: 'rgba(241, 229, 172, 0.6)',
+                        borderColor: '#D4AF37',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        type: 'line',
+                        label: '月度结算率 (%)',
+                        data: [32.4, 23.0, 17.2, 22.2, 21.1, 24.0, 26.6, 21.1, 18.3, 15.1],
+                        borderColor: '#D4AF37',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#fff',
+                        fill: false,
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 12, family: 'Montserrat' } } },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        beginAtZero: true,
+                        title: { display: true, text: '金額 (k)', font: { size: 12 } },
+                        grid: { color: 'rgba(0,0,0,0.03)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+                        max: 40,
+                        title: { display: true, text: '结算率 (%)', font: { size: 12 } },
+                        grid: { drawOnChartArea: false } // only want the grid lines for one axis
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 3. Category Doughnut Chart
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['女装', '配饰', '女鞋', '女包', '其它'],
+                datasets: [{
+                    data: [2288, 198, 126, 44, 12],
+                    backgroundColor: ['#2D3436', '#F1E5AC', '#D4AF37', '#A8A8A8', '#E8B4B8'],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right', labels: { padding: 20, font: { size: 13, family: 'Montserrat' } } } } }
+        });
+
+        // 4. Brand Top 30 Combo Chart
+        new Chart(document.getElementById('brandChart'), {
+            type: 'bar',
+            data: {
+                labels: [
+                    'VALERIAOBBA', 'Aimme Sparrow', 'iSHOUYUE', 'MONSTERMING', 'MSBEAST', 'MIMBLANCHE', '夹生HALFMADE', 'CHRISOUBYDAN',
+                    'AAAD官方', 'EchoAde集合', '有尾服饰', 'SENSEAWEEK', 'Echo Ade官方', 'ABT企业', 'ABT服饰', 'UNRESTRAIN', '涂月官方',
+                    'PHISM企业', 'iSHOUYUE女装', '阿颖Alyinvow', '付智恩时尚', 'Echo Ade旗舰', 'SOLSOL买手', '伦扩服饰', 'LOOKNOW',
+                    'RAWVEIL', 'BeauToday', 'ICE DUST', 'EMU Australia', '0To1 Pro'
+                ],
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: '年度总 GMV (k)',
+                        data: [2781, 1796, 1456, 1228, 1158, 914, 834, 807, 794, 794, 686, 680, 627, 543, 459, 454, 255, 250, 237, 210, 197, 188, 186, 181, 179, 173, 155, 154, 144, 139],
+                        backgroundColor: 'rgba(168, 213, 226, 0.6)',
+                        borderColor: '#A8D5E2',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        type: 'line',
+                        label: '季度结算率 (%)',
+                        data: [20.1, 14.7, 11.9, 20.4, 16.5, 19.9, 13.4, 28.8, 26.5, 14.6, 11.3, 20.9, 20.4, 22.1, 17.1, 27.6, 26.4, 17.3, 22.5, 19.1, 7.1, 23.8, 22.5, 11.7, 23.2, 17.7, 37.4, 21.1, 21.2, 15.4],
+                        borderColor: '#E8B4B8',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        fill: false,
+                        yAxisID: 'y1'
+                    },
+                    {
+                        type: 'line',
+                        label: '预估佣金率 (%)',
+                        data: [25.0, 33.5, 30.0, 24.0, 20.0, 25.0, 25.0, 25.0, 20.0, 24.1, 24.9, 40.0, 24.8, 27.1, 26.9, 26.2, 20.0, 20.7, 30.0, 29.5, 20.0, 23.0, 20.0, 25.0, 29.8, 30.0, 24.4, 25.0, 21.2, 25.1],
+                        borderColor: '#2D3436',
+                        borderWidth: 1.5,
+                        pointRadius: 2,
+                        fill: false,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        title: { display: true, text: 'GMV (k)', font: { size: 12 } },
+                        grid: { color: 'rgba(0,0,0,0.03)' },
+                        ticks: { font: { size: 11 } }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        max: 45,
+                        title: { display: true, text: '比率 (%)', font: { size: 12 } },
+                        grid: { drawOnChartArea: false },
+                        ticks: { font: { size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 45,
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+
+        updateProgress();
+    </script>
+</body>
+
+</html>

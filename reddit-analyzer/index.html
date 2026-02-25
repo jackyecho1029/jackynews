@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit 抱怨分析仪 | Business Pain Miner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a12;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #7c3aed;
+            --accent-glow: rgba(124, 58, 237, 0.35);
+            --accent2: #06b6d4;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --red: #ef4444;
+            --orange: #f97316;
+            --yellow: #eab308;
+            --green: #22c55e;
+            --cat1: #ef4444;
+            --cat2: #3b82f6;
+            --cat3: #f97316;
+            --cat4: #a855f7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes bgPulse {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.05);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 28px 0 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .logo-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #c4b5fd;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Main layout */
+        .main {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 24px;
+            padding: 28px 0 40px;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.13);
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            display: block;
+            width: 3px;
+            height: 13px;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+            border-radius: 2px;
+        }
+
+        /* Input */
+        .input-group {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Time range */
+        .time-range {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .time-btn {
+            padding: 8px 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .time-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .time-btn.active {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: rgba(124, 58, 237, 0.5);
+            color: #c4b5fd;
+        }
+
+        /* Category checkboxes */
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .category-item.checked {
+            border-color: var(--cat-color);
+            background: rgba(var(--cat-rgb), 0.08);
+        }
+
+        .cat-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--cat-color);
+            border-radius: 5px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .category-item.checked .cat-checkbox {
+            background: var(--cat-color);
+        }
+
+        .cat-check-mark {
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            display: none;
+        }
+
+        .category-item.checked .cat-check-mark {
+            display: block;
+        }
+
+        .cat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cat-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .cat-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--cat-color);
+        }
+
+        .cat-question {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .cat-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .keyword-pill {
+            font-size: 10px;
+            padding: 2px 7px;
+            background: rgba(var(--cat-rgb), 0.15);
+            color: var(--cat-color);
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        /* Analyze button */
+        .analyze-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 28px var(--accent-glow);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(0);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Right panel */
+        .results-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .empty-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .empty-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 380px;
+        }
+
+        /* Results */
+        .results-container {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .results-container.visible {
+            display: flex;
+        }
+
+        /* Stats cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cat-color), transparent);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--cat-color);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-sublabel {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .top-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--cat-color);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bar Chart */
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .bar-label {
+            width: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: var(--bar-color);
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            min-width: 30px;
+        }
+
+        .bar-count {
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .bar-pct {
+            width: 46px;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* Insight box */
+        .insight-box {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: #c4b5fd;
+            line-height: 1.6;
+        }
+
+        .insight-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Threads list */
+        .threads-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            backdrop-filter: blur(10px);
+        }
+
+        .threads-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .threads-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .thread-item {
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thread-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(3px);
+        }
+
+        .thread-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--cat-color);
+        }
+
+        .thread-cat-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--cat-color);
+            background: rgba(var(--cat-rgb), 0.12);
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .thread-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .thread-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .thread-meta span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .spinner {
+            display: block;
+        }
+
+        .loading .btn-text {
+            display: none;
+        }
+
+        /* Additional subreddit input */
+        .sub-input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .sub-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            color: #67e8f9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .sub-tag .remove-sub {
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 14px;
+            line-height: 1;
+            transition: opacity 0.2s;
+        }
+
+        .sub-tag .remove-sub:hover {
+            opacity: 1;
+        }
+
+        .sub-add-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .sub-add-row input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .sub-add-row input:focus {
+            border-color: var(--accent2);
+        }
+
+        .sub-add-row input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .sub-add-btn {
+            padding: 8px 14px;
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: #67e8f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .sub-add-btn:hover {
+            background: rgba(6, 182, 212, 0.25);
+        }
+
+        /* No results state */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-inner">
+                <div class="logo">
+                    <div class="logo-icon">📡</div>
+                    <div class="logo-text">
+                        <h1>Reddit 抱怨分析仪</h1>
+                        <p>Business Pain Miner · Powered by Greg Isenberg Logic</p>
+                    </div>
+                </div>
+                <div class="badge">🔥 Skill Era · 市场需求探测器</div>
+            </div>
+        </header>
+
+        <div class="main">
+            <!-- Sidebar: Controls -->
+            <aside class="sidebar">
+
+                <!-- Keyword Search -->
+                <div class="card">
+                    <div class="card-title">搜索关键词</div>
+                    <div class="input-group">
+                        <span class="input-icon">🔍</span>
+                        <input type="text" id="keyword-input" placeholder="e.g. CRM software, gym gear..." />
+                    </div>
+                    <p style="font-size:11px; color:var(--text-secondary);">输入你想要验证的产品类别或行业关键词</p>
+                </div>
+
+                <!-- Time Range -->
+                <div class="card">
+                    <div class="card-title">时间范围</div>
+                    <div class="time-range">
+                        <button class="time-btn" data-days="7" onclick="setTime(this)">7天</button>
+                        <button class="time-btn active" data-days="30" onclick="setTime(this)">30天</button>
+                        <button class="time-btn" data-days="90" onclick="setTime(this)">90天</button>
+                        <button class="time-btn" data-days="365" onclick="setTime(this)">全部</button>
+                    </div>
+                </div>
+
+                <!-- Subreddits -->
+                <div class="card">
+                    <div class="card-title">目标社区</div>
+                    <div class="sub-input-row" id="sub-tags">
+                        <span class="sub-tag">r/smallbusiness <span class="remove-sub"
+                                onclick="removeSub(this)">×</span></span>
+                        <span class="sub-tag">r/entrepreneur <span class="remove-sub"
+                                onclick="removeSub(this)">×</span></span>
+                        <span class="sub-tag">r/SaaS <span class="remove-sub" onclick="removeSub(this)">×</span></span>
+                        <span class="sub-tag">r/marketing <span class="remove-sub"
+                                onclick="removeSub(this)">×</span></span>
+                    </div>
+                    <div class="sub-add-row">
+                        <input type="text" id="sub-input" placeholder="添加 subreddit..." />
+                        <button class="sub-add-btn" onclick="addSub()">+ 添加</button>
+                    </div>
+                </div>
+
+                <!-- Complaint Categories -->
+                <div class="card">
+                    <div class="card-title">抱怨分类</div>
+                    <div class="categories" id="categories">
+
+                        <div class="category-item checked" data-cat="functional"
+                            style="--cat-color:var(--cat1);--cat-rgb:239,68,68" onclick="toggleCat(this)">
+                            <div class="cat-checkbox" style="border-color:var(--cat1)">
+                                <span class="cat-check-mark">✓</span>
+                            </div>
+                            <div class="cat-info">
+                                <div class="cat-header">
+                                    <span class="cat-name" style="color:var(--cat1)">⚡ 功能威胁</span>
+                                </div>
+                                <div class="cat-question">产品是否出问题？</div>
+                                <div class="cat-keywords">
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:239,68,68;color:var(--cat1)">broke</span>
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:239,68,68;color:var(--cat1)">problem</span>
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:239,68,68;color:var(--cat1)">unstable</span>
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:239,68,68;color:var(--cat1)">broken</span>
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:239,68,68;color:var(--cat1)">defective</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-item checked" data-cat="fit"
+                            style="--cat-color:var(--cat2);--cat-rgb:59,130,246" onclick="toggleCat(this)">
+                            <div class="cat-checkbox" style="border-color:var(--cat2)">
+                                <span class="cat-check-mark">✓</span>
+                            </div>
+                            <div class="cat-info">
+                                <div class="cat-header">
+                                    <span class="cat-name" style="color:var(--cat2)">🎯 适配威胁</span>
+                                </div>
+                                <div class="cat-question">产品是否适合我？</div>
+                                <div class="cat-keywords">
+                                    <span class="keyword-pill" style="--cat-rgb:59,130,246;color:var(--cat2)">doesn't
+                                        fit</span>
+                                    <span class="keyword-pill" style="--cat-rgb:59,130,246;color:var(--cat2)">too
+                                        complex</span>
+                                    <span class="keyword-pill" style="--cat-rgb:59,130,246;color:var(--cat2)">not for
+                                        me</span>
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:59,130,246;color:var(--cat2)">overkill</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-item checked" data-cat="alternative"
+                            style="--cat-color:var(--cat3);--cat-rgb:249,115,22" onclick="toggleCat(this)">
+                            <div class="cat-checkbox" style="border-color:var(--cat3)">
+                                <span class="cat-check-mark">✓</span>
+                            </div>
+                            <div class="cat-info">
+                                <div class="cat-header">
+                                    <span class="cat-name" style="color:var(--cat3)">↗️ 替代威胁</span>
+                                </div>
+                                <div class="cat-question">有没有更好的选择？</div>
+                                <div class="cat-keywords">
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:249,115,22;color:var(--cat3)">alternative</span>
+                                    <span class="keyword-pill" style="--cat-rgb:249,115,22;color:var(--cat3)">instead
+                                        of</span>
+                                    <span class="keyword-pill" style="--cat-rgb:249,115,22;color:var(--cat3)">switch
+                                        to</span>
+                                    <span class="keyword-pill" style="--cat-rgb:249,115,22;color:var(--cat3)">better
+                                        than</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-item checked" data-cat="regret"
+                            style="--cat-color:var(--cat4);--cat-rgb:168,85,247" onclick="toggleCat(this)">
+                            <div class="cat-checkbox" style="border-color:var(--cat4)">
+                                <span class="cat-check-mark">✓</span>
+                            </div>
+                            <div class="cat-info">
+                                <div class="cat-header">
+                                    <span class="cat-name" style="color:var(--cat4)">💸 心理威胁</span>
+                                </div>
+                                <div class="cat-question">买了会不会后悔？</div>
+                                <div class="cat-keywords">
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:168,85,247;color:var(--cat4)">regret</span>
+                                    <span class="keyword-pill"
+                                        style="--cat-rgb:168,85,247;color:var(--cat4)">overrated</span>
+                                    <span class="keyword-pill" style="--cat-rgb:168,85,247;color:var(--cat4)">worth
+                                        it</span>
+                                    <span class="keyword-pill" style="--cat-rgb:168,85,247;color:var(--cat4)">waste of
+                                        money</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Run button -->
+                <button class="analyze-btn" id="analyze-btn" onclick="runAnalysis()">
+                    <div class="spinner" id="spinner"></div>
+                    <span class="btn-text" id="btn-text">🚀 开始分析</span>
+                </button>
+
+            </aside>
+
+            <!-- Right: Results -->
+            <main class="results-panel">
+
+                <!-- Empty state -->
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <div class="empty-title">开始你的市场洞察</div>
+                    <div class="empty-desc">
+                        输入一个产品或服务关键词，选择你想要分析的抱怨类别，然后点击「开始分析」。<br><br>
+                        系统将从 Reddit 抓取相关帖子，并按抱怨类别进行频率统计，帮助你发现最高意图的商业机会。
+                    </div>
+                </div>
+
+                <!-- Results (hidden initially) -->
+                <div class="results-container" id="results">
+
+                    <!-- Stat cards -->
+                    <div class="stats-row" id="stats-row"></div>
+
+                    <!-- Bar chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">📊 抱怨频率分析 <span
+                                style="font-size:12px;color:var(--text-secondary);font-weight:400;margin-left:6px;"
+                                id="total-count"></span></div>
+                        <div class="chart-bars" id="chart-bars"></div>
+                        <div class="insight-box" id="insight-box" style="margin-top:18px;"></div>
+                    </div>
+
+                    <!-- Thread list -->
+                    <div class="threads-card">
+                        <div class="threads-header">
+                            <div class="chart-title" style="margin-bottom:0">📋 最匹配帖子</div>
+                            <span style="font-size:12px;color:var(--text-secondary)" id="thread-count"></span>
+                        </div>
+                        <div class="threads-list" id="threads-list"></div>
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let selectedTime = 30;
+        const CATEGORIES = {
+            functional: {
+                label: '功能威胁',
+                icon: '⚡',
+                color: '#ef4444',
+                rgb: '239,68,68',
+                // 产品是否出问题？
+                keywords: [
+                    'broke', 'broken', 'problem', 'unstable', 'defective', 'bug', 'glitch', 'crash',
+                    'error', 'not working', "doesn't work", 'issue', 'cracked', 'cracking', 'failed',
+                    'failure', 'inconsistent', 'unreliable', 'terrible quality', 'fell apart',
+                    'stopped working', 'frustrating', 'annoying', 'disappointed', 'disappointing',
+                    'keep breaking', 'keeps breaking', 'difficult', 'frustrat', 'pain in'
+                ]
+            },
+            fit: {
+                label: '适配威胁',
+                icon: '🎯',
+                color: '#3b82f6',
+                rgb: '59,130,246',
+                // 产品是否适合我？
+                keywords: [
+                    "doesn't fit", 'too complex', 'not for me', 'overkill', 'too big', 'too small',
+                    'too complicated', 'hard to use', 'confusing', 'not suitable', 'hard to find',
+                    'limited options', 'no options', 'no good', 'hard to get', 'can\'t find',
+                    'where to find', 'where can i find', 'where do i find', 'looking for',
+                    'anyone know', 'recommendation', 'suggest', 'need help finding', 'wish there was',
+                    'struggle with', 'not available', 'out of stock'
+                ]
+            },
+            alternative: {
+                label: '替代威胁',
+                icon: '↗️',
+                color: '#f97316',
+                rgb: '249,115,22',
+                // 有没有更好的选择？
+                keywords: [
+                    'alternative', 'instead of', 'switch to', 'better than', ' vs ', ' vs.', 'replace',
+                    'switching from', 'moved to', 'switched to', 'comparing', 'comparison', 'which is better',
+                    'or', 'other options', 'other brands', 'worth switching', 'should i switch',
+                    'best option', 'better option', 'vs other', 'similar to', 'like X but',
+                    'recommend something', 'what else', 'any other'
+                ]
+            },
+            regret: {
+                label: '心理威胁',
+                icon: '💸',
+                color: '#a855f7',
+                rgb: '168,85,247',
+                // 买了会不会后悔？
+                keywords: [
+                    'regret', 'overrated', 'worth it', 'waste of money', 'not worth', 'disappointed',
+                    'overhyped', 'scam', 'ripoff', 'rip off', 'too expensive', 'overpriced',
+                    'is it worth', 'should i buy', 'worth buying', 'waste', 'regretted',
+                    'not impressed', 'expected better', 'misleading', 'false advertising',
+                    'paying too much', 'money wasted', 'regret buying', 'never again'
+                ]
+            }
+        };
+
+        function setTime(btn) {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedTime = parseInt(btn.dataset.days);
+        }
+
+        function toggleCat(el) {
+            el.classList.toggle('checked');
+        }
+
+        function addSub() {
+            const input = document.getElementById('sub-input');
+            const val = input.value.trim().replace(/^r\//, '');
+            if (!val) return;
+            const tag = document.createElement('span');
+            tag.className = 'sub-tag';
+            tag.innerHTML = `r/${val} <span class="remove-sub" onclick="removeSub(this)">×</span>`;
+            document.getElementById('sub-tags').appendChild(tag);
+            input.value = '';
+        }
+
+        function removeSub(x) {
+            x.parentElement.remove();
+        }
+
+        document.getElementById('sub-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') addSub();
+        });
+
+        function getSubreddits() {
+            return Array.from(document.querySelectorAll('#sub-tags .sub-tag')).map(t => {
+                return t.textContent.replace('×', '').trim().replace(/^r\//, '');
+            });
+        }
+
+        function getActiveCategories() {
+            return Array.from(document.querySelectorAll('.category-item.checked')).map(el => el.dataset.cat);
+        }
+
+        function mapPostsFromJson(data) {
+            return (data.data?.children || []).map(p => ({
+                subreddit: p.data.subreddit,
+                title: p.data.title || '',
+                selftext: p.data.selftext || '',
+                url: `https://reddit.com${p.data.permalink}`,
+                score: p.data.score || 0,
+                comments: p.data.num_comments || 0,
+                created: p.data.created_utc
+            }));
+        }
+
+        async function fetchRedditPosts(subreddit, keyword) {
+            // Strategy: fetch broadly (keyword only), then filter locally.
+            // Fetch both 'new' AND 'hot' for better coverage.
+            const query = encodeURIComponent(keyword);
+            const timeParam = getTimeParam();
+            const urls = [
+                `https://www.reddit.com/r/${subreddit}/search.json?q=${query}&restrict_sr=1&sort=new&t=${timeParam}&limit=50`,
+                `https://www.reddit.com/r/${subreddit}/search.json?q=${query}&restrict_sr=1&sort=hot&t=${timeParam}&limit=50`,
+            ];
+            let posts = [];
+            for (const url of urls) {
+                try {
+                    const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                    if (!resp.ok) continue;
+                    const data = await resp.json();
+                    posts = posts.concat(mapPostsFromJson(data));
+                } catch (e) { /* skip */ }
+            }
+            return posts;
+        }
+
+        function getTimeParam() {
+            if (selectedTime === 7) return 'week';
+            if (selectedTime === 30) return 'month';
+            if (selectedTime === 90) return 'year';
+            return 'all';
+        }
+
+        function categorizePost(post, activeCats) {
+            const text = (post.title + ' ' + post.selftext).toLowerCase();
+            const matched = [];
+            for (const cat of activeCats) {
+                const catData = CATEGORIES[cat];
+                const match = catData.keywords.some(kw => text.includes(kw.toLowerCase()));
+                if (match) matched.push(cat);
+            }
+            return matched;
+        }
+
+        async function runAnalysis() {
+            const keyword = document.getElementById('keyword-input').value.trim();
+            if (!keyword) {
+                document.getElementById('keyword-input').focus();
+                document.getElementById('keyword-input').style.borderColor = 'var(--red)';
+                setTimeout(() => document.getElementById('keyword-input').style.borderColor = '', 1000);
+                return;
+            }
+
+            const activeCats = getActiveCategories();
+            if (activeCats.length === 0) return;
+
+            const subreddits = getSubreddits();
+            if (subreddits.length === 0) return;
+
+            // UI: Loading
+            const btn = document.getElementById('analyze-btn');
+            btn.disabled = true;
+            btn.classList.add('loading');
+
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('results').classList.remove('visible');
+
+            // Fetch (broad, from multiple subreddits and sort orders)
+            let allPosts = [];
+            for (const sub of subreddits) {
+                const posts = await fetchRedditPosts(sub, keyword);
+                allPosts = allPosts.concat(posts);
+            }
+
+            // Deduplicate
+            const seen = new Set();
+            allPosts = allPosts.filter(p => { if (seen.has(p.url)) return false; seen.add(p.url); return true; });
+
+            // Categorize
+            const catCounts = {};
+            const catPosts = {};
+            for (const cat of activeCats) { catCounts[cat] = 0; catPosts[cat] = []; }
+
+            for (const post of allPosts) {
+                const matched = categorizePost(post, activeCats);
+                for (const cat of matched) {
+                    catCounts[cat]++;
+                    if (catPosts[cat].length < 8) catPosts[cat].push({ ...post, matchedCat: cat });
+                }
+            }
+
+            // Render
+            renderResults(keyword, catCounts, catPosts, allPosts.length, activeCats);
+
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            document.getElementById('results').classList.add('visible');
+        }
+
+        function renderResults(keyword, catCounts, catPosts, totalFetched, activeCats) {
+            const total = Object.values(catCounts).reduce((a, b) => a + b, 0);
+
+            // Sort cats by count
+            const sorted = [...activeCats].sort((a, b) => catCounts[b] - catCounts[a]);
+            const topCat = sorted[0];
+
+            // Stats row
+            const statsRow = document.getElementById('stats-row');
+            statsRow.innerHTML = '';
+            statsRow.style.gridTemplateColumns = `repeat(${activeCats.length}, 1fr)`;
+
+            for (let i = 0; i < sorted.length; i++) {
+                const cat = sorted[i];
+                const d = CATEGORIES[cat];
+                const count = catCounts[cat];
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                const isTop = i === 0;
+                const card = document.createElement('div');
+                card.className = 'stat-card';
+                card.style.setProperty('--cat-color', d.color);
+                card.innerHTML = `
+      ${isTop ? '<span class="top-badge">最高频</span>' : ''}
+      <div class="stat-label">${d.icon} ${d.label}</div>
+      <div class="stat-value" style="color:${d.color}">${count}</div>
+      <div class="stat-sublabel">${pct}% 占比 · 共 ${totalFetched} 贴</div>
+    `;
+                statsRow.appendChild(card);
+            }
+
+            // Bar chart
+            document.getElementById('total-count').textContent = `共分析 ${totalFetched} 条帖子，匹配 ${total} 次`;
+            const bars = document.getElementById('chart-bars');
+            bars.innerHTML = '';
+            const maxCount = Math.max(...Object.values(catCounts), 1);
+
+            for (const cat of sorted) {
+                const d = CATEGORIES[cat];
+                const count = catCounts[cat];
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                const width = Math.round((count / maxCount) * 100);
+                const row = document.createElement('div');
+                row.className = 'bar-row';
+                row.innerHTML = `
+      <div class="bar-label">${d.icon} ${d.label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${width}%; background:${d.color}; --bar-color:${d.color}">
+          <span class="bar-count">${count}</span>
+        </div>
+      </div>
+      <div class="bar-pct">${pct}%</div>
+    `;
+                bars.appendChild(row);
+            }
+
+            // Insight
+            const topD = CATEGORIES[topCat];
+            const topCount = catCounts[topCat];
+            const insightMap = {
+                functional: `用户对 "**${keyword}**" 的产品稳定性高度不满。这是构建 **可靠性更强的替代品** 或 **监控/修复工具** 的绝佳切入口。`,
+                fit: `"**${keyword}**" 的目标用户正在被现有产品的复杂性和不适配性困扰。一个 **更垂直、更简单的工具** 将有极高的付费意愿。`,
+                alternative: `大量用户正在主动寻找 "**${keyword}**" 的替代品。这是 **提供差异化定位** 的最佳窗口期，竞品已失去用户信任。`,
+                regret: `用户在购买 "**${keyword}**" 后感到后悔，这说明市场存在严重的 **期待落差**。一个 **诚实展示价值、有清晰承诺** 的产品将赢得口碑。`
+            };
+
+            document.getElementById('insight-box').innerHTML = `
+    <span class="insight-icon">💡</span>
+    <span><strong>机会信号：</strong>${insightMap[topCat] || `最高频类别为 ${topD.label}，共 ${topCount} 次匹配，建议重点关注。`}</span>
+  `;
+
+            // Threads
+            const allMatchedPosts = sorted.flatMap(cat => catPosts[cat].map(p => ({ ...p, matchedCat: cat })))
+                .slice(0, 15);
+
+            const threadCount = document.getElementById('thread-count');
+            const threadsList = document.getElementById('threads-list');
+            threadCount.textContent = `共 ${allMatchedPosts.length} 条`;
+            threadsList.innerHTML = '';
+
+            if (allMatchedPosts.length === 0) {
+                threadsList.innerHTML = `<div class="no-results">🔍 未找到相关帖子，请尝试更换关键词或扩大时间范围</div>`;
+            } else {
+                for (const post of allMatchedPosts) {
+                    const d = CATEGORIES[post.matchedCat];
+                    const item = document.createElement('a');
+                    item.className = 'thread-item';
+                    item.href = post.url;
+                    item.target = '_blank';
+                    item.style.setProperty('--cat-color', d.color);
+                    item.style.setProperty('--cat-rgb', d.rgb);
+                    item.innerHTML = `
+        <div class="thread-cat-tag" style="color:${d.color};background:rgba(${d.rgb},0.12)">${d.icon} ${d.label}</div>
+        <div class="thread-title">${escapeHtml(post.title)}</div>
+        <div class="thread-meta">
+          <span>r/${escapeHtml(post.subreddit)}</span>
+          <span>⬆ ${post.score}</span>
+          <span>💬 ${post.comments}</span>
+        </div>
+      `;
+                    threadsList.appendChild(item);
+                }
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        // Trigger on Enter
+        document.getElementById('keyword-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') runAnalysis();
+        });
+    </script>
+</body>
+
+</html>
