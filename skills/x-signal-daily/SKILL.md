@@ -74,8 +74,6 @@ anchor_thought: "[Thought-provoking quote for the day]"
 
 ### Step 1: Automated Generation
 
-Since the system is now fully automated (V1), you do not need to manually check posts or draft content.
-
 Run the one-click generation script:
 
 ```bash
@@ -84,14 +82,11 @@ npm run generate-x-signal
 ```
 
 **What this script does:**
-1.  **Fetches** latest tweets from 30+ sources (via local RSSHub + your Auth Token).
-2.  **Deduplicates** content against the last 7 days of posts.
-3.  **Generates** a full Markdown post using Gemini AI, including:
-    *   Dynamic Title & Anchor Thought
-    *   Category Classification
-    *   Chinese Summary & "Potato's Take"
-    *   **Source Links** for every viewpoint
-4.  **Saves** the file to `posts/x-signals/[YYYY-MM-DD]-daily-signals.md`.
+1.  **Fetches** latest tweets from 50+ sources via public Nitter RSS mirrors (no API key/token required).
+2.  **Categorizes** content into 5 key blocks (AI科技, 财富商业, 增长营销, 智慧人生, 构建者工具).
+3.  **Deduplicates** content against the last 7 days of posts using content fingerprints.
+4.  **Generates** a full Markdown post using Gemini/GLM AI, including per-section summaries and action items.
+5.  **Saves** the file to `posts/x-signals/[YYYY-MM-DD]-daily-signals.md`.
 
 ### Step 2: Publish to Blog
 
