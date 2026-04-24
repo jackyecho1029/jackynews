@@ -49,6 +49,7 @@ jobs:
           git config --global user.email "bot@potatoblog.ai"
           git add reports/gems/ posts/
           git commit -m "auto: weekly hidden gems update [$(date +%Y-%m-%d)]" || exit 0
+          git pull --rebase origin main
           git push origin HEAD:main
 
       - name: Update Submodule Reference in Parent
