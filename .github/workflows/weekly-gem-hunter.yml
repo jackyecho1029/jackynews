@@ -43,9 +43,12 @@ jobs:
 
       - name: Commit and Push Submodule Changes
         working-directory: ./potatoblog
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "Gem Hunter Bot"
           git config --global user.email "bot@potatoblog.ai"
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/jackyecho1029/potatoblog.git
           git add reports/gems/ posts/
           git commit -m "auto: weekly hidden gems update [$(date +%Y-%m-%d)]" || exit 0
           git push origin HEAD:main
