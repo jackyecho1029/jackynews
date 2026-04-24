@@ -46,9 +46,11 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
+          PAT=$(echo "$GH_PAT" | tr -d '
+' | tr -d '')
           git config --global user.name "Gem Hunter Bot"
           git config --global user.email "bot@potatoblog.ai"
-          git config remote.origin.url "https://x-access-token:${GH_PAT}@github.com/jackyecho1029/potatoblog.git"
+          git config remote.origin.url "https://x-access-token:${PAT}@github.com/jackyecho1029/potatoblog.git"
           git add reports/gems/ posts/
           git commit -m "auto: weekly long-form gems update [$(date +%Y-%m-%d)]" || exit 0
           git push origin HEAD:main
