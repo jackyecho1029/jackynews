@@ -61,4 +61,5 @@ jobs:
           git config --global user.email "bot@potatoblog.ai"
           git add potatoblog
           git commit -m "auto: update potatoblog submodule pointer [$(date +%Y-%m-%d)]" || exit 0
+          git pull --rebase origin main
           git push origin main
