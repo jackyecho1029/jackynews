@@ -39,7 +39,7 @@ jobs:
         working-directory: potatoblog
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npm run analyze-long-gems
 
       - name: Commit and Push Submodule Changes
